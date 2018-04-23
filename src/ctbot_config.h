@@ -169,7 +169,7 @@ public:
     static constexpr uint8_t ENA_RCK_PIN { 1 }; /**< Pin number of ena shift register RCK signal */
 
     /* shift */
-    using SHIFT_REG = PORT_C; /**< port and pin register addresses for shift register signals */
+    using SHIFT_REG = PORT_C; /**< Port and pin register addresses for shift register signals */
     static constexpr uint8_t SHIFT_SDATA_PIN { 0 }; /**< Pin number of shift register SDATA signal */
 
     /* leds */
@@ -190,15 +190,15 @@ public:
     static constexpr uint16_t MOT_PWM_MAX { 16000 }; /**< Maximum PWM value for motors */
 
     /* servos */
-    using SERVO_1_REG = PORT_B; /**< port and pin register addresses for servo 1 pwm signal */
+    using SERVO_1_REG = PORT_B; /**< Port and pin register addresses for servo 1 pwm signal */
     static constexpr uint8_t SERVO_1_PIN { 3 }; /**< Pin number of servo 1 pwm signal */
     static constexpr intptr_t SERVO_1_OCR { OCR_3A }; /**< Address of servo 1 OCR register */
-    using SERVO_2_REG = PORT_D; /**< port and pin register addresses for servo 2 pwm signal */
+    using SERVO_2_REG = PORT_D; /**< Port and pin register addresses for servo 2 pwm signal */
     static constexpr uint8_t SERVO_2_PIN { 7 }; /**< Pin number of servo 2 pwm signal */
     static constexpr intptr_t SERVO_2_OCR { OCR_3B }; /**< Address of servo 2 OCR register */
 
     /* uart0 */
-    using UART0_RX_REG = PORT_D; /**< port and pin register addresses for uart0 signals */
+    using UART0_RX_REG = PORT_D; /**< Port and pin register addresses for uart0 signals */
     static constexpr uint8_t UART0_RX_PIN { 0 }; /**< Pin number of uart0 RX signal */
 };
 

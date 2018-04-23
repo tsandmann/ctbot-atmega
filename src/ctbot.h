@@ -101,7 +101,7 @@ protected:
      * @brief Constructor of main class
      *
      * The constructor initializes uart0 to allow early debug infos printed out there.
-     * @note Constructor is protected to enforce singleton pattern.
+     * @note Constructor is protected to enforce singleton pattern
      */
     CtBot();
 
@@ -111,16 +111,13 @@ protected:
     CtBot(CtBot&&) = delete;
 
     /**
-     * @brief Initializing of command line parser
-     *
-     * Registers the actions for every command.
+     * @brief Initializing of command line parser, registers the actions for every command
      */
     void init_parser();
 
     /**
      * @brief Main task implementation
-     *
-     * This method is run every TASK_PERIOD_MS ms, e.g. to update sensor data.
+     * @note This method is run every TASK_PERIOD_MS ms, e.g. to update sensor data
      *
      * @startuml{CtBot_run.png}
      *  activate CtBot
@@ -141,7 +138,7 @@ protected:
     /**
      * @brief Shuts everything down and puts the controller into sleed mode
      *
-     * All motors, servos, leds and sensors are stopped / shut dwon. All tasks are suspended.
+     * All motors, servos, leds, sensors are stopped / shut down and all tasks are suspended.
      */
     void shutdown();
 
@@ -201,8 +198,8 @@ public:
     }
 
     /**
-     * @brief Destructor to destroy main task and clean up everything
-     * @note Destructor is never called in current setup.
+     * @brief Default destructor
+     * @note Destructor is never called in current setup
      */
     ~CtBot() = default;
 

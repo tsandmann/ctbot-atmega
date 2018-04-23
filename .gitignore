@@ -1,0 +1,11 @@
+/doc
+*.i
+*.ii
+*.s
+.pioenvs
+.piolibdeps
+/.vscode
+/.cproject
+/.project
+/.settings
+/.travis.yml

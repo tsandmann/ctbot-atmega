@@ -34,8 +34,8 @@ namespace ctbot {
 
 class Motor {
 protected:
-    static constexpr uint16_t PWM_PRESCALER { 1U };
-    static constexpr uint16_t PWM_FREQUENCY { 16129U }; // PWM frequency / Hz
+    static constexpr uint16_t PWM_PRESCALER { 1U }; /**< Clock prescaler for PWM timer */
+    static constexpr uint16_t PWM_FREQUENCY { 16129U }; /**< PWM frequency in Hz */
     static constexpr uint16_t PWM_TOP { static_cast<uint16_t>(static_cast<float>(F_CPU) / (1.f * PWM_PRESCALER * PWM_FREQUENCY)) };
 
     int16_t pwm_;

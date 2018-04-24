@@ -115,14 +115,17 @@
 int main() {
     /* disable interrupts */
     __builtin_avr_cli();
+
+    /* wait for 100 ms to get all hardware initialized */
     _delay_ms(100.f);
 
     /* create CtBot singleton instance... */
     auto& ctbot(ctbot::CtBot::get_instance());
-    /* ..., initialize it... */
+
+    /* initialize it... */
     ctbot.setup();
 
-    /* create test tasks if configured */
+    /* create test tasks if configured... */
     if (ctbot::CtBotConfig::LED_TEST_AVAILABLE) {
         new ctbot::tests::LedTest(ctbot);
     }
@@ -139,6 +142,8 @@ int main() {
         new ctbot::tests::SensorLcdTest(ctbot);
     }
 
-    /* ... and start CtBot instance */
+    /* finally start CtBot instance */
     ctbot.start();
+
+    // we should never get here
 }

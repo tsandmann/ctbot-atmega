@@ -38,8 +38,8 @@ class Functor;
 
 /**
  * @brief General-purpose polymorphic function wrapper
- * @tparam Res Result type of wrapped function
- * @tparam Args Variadic argument types of wrapped function
+ * @tparam Res: Result type of wrapped function
+ * @tparam Args: Variadic argument types of wrapped function
  */
 template <typename Res, typename... Args>
 class Functor<Res(Args...)> {
@@ -90,7 +90,7 @@ protected:
     type lambda_ptr(U& u) {
         p_lambda_ = new uint8_t[sizeof(U)];
         if (! p_lambda_) {
-            std::cerr << "Functor::Functor(): allocation of " << sizeof(U) << " bytes failed\n";
+            // std::cerr << "Functor::Functor(): allocation of " << sizeof(U) << " bytes failed\n";
             size = 0;
             le_ = nullptr;
             return reinterpret_cast<type>(lambda_ptr_exec<U>);
@@ -112,13 +112,13 @@ public:
 
     /**
      * @brief Copy constructor
-     * @param[in] other Instance to copy
+     * @param[in] other: Instance to copy
      */
     Functor(const Functor& other) {
         if (other.size) {
             p_lambda_ = new uint8_t[other.size];
             if (! p_lambda_) {
-                std::cerr << "Functor::Functor(): allocation of " << other.size << " bytes failed\n";
+                // std::cerr << "Functor::Functor(): allocation of " << other.size << " bytes failed\n";
                 size = 0;
                 le_ = nullptr;
                 func_ = func_ptr_exec;
@@ -140,7 +140,7 @@ public:
 
     // /*
     //  * @brief Move constructor
-    //  * @param[in] other Instance to move in
+    //  * @param[in] other: Instance to move in
     //  */
     // Functor(Functor&& other) noexcept {
     //     le_ = other.le_;
@@ -155,7 +155,7 @@ public:
 
     /**
      * @brief Copy assignment operator
-     * @param[in] other Instance to copy
+     * @param[in] other: Instance to copy
      * @return Reference to this instance
      */
     Functor& operator= (const Functor& other) {
@@ -167,7 +167,7 @@ public:
         if (other.size) {
             p_lambda_ = new uint8_t[other.size];
             if (! p_lambda_) {
-                std::cerr << "Functor::operator=(): allocation of " << other.size << " bytes failed\n";
+                // std::cerr << "Functor::operator=(): allocation of " << other.size << " bytes failed\n";
                 size = 0;
                 le_ = nullptr;
                 func_ = func_ptr_exec;
@@ -191,7 +191,7 @@ public:
 
     // /*
     //  * @brief Move assignment operator
-    //  * @param[in] other Instance to move in
+    //  * @param[in] other: Instance to move in
     //  * @return Reference to this instance
     //  */
     // Functor& operator= (Functor&& other) noexcept {
@@ -257,9 +257,9 @@ public:
 
 /**
  * @brief General-purpose polymorphic function wrapper with bound arguments
- * @tparam Res Result type of wrapped function
- * @tparam Args Variadic argument types of wrapped function
- * @tparam BoundArgs Variadic argument types of bound arguments
+ * @tparam Res: Result type of wrapped function
+ * @tparam Args: Variadic argument types of wrapped function
+ * @tparam BoundArgs: Variadic argument types of bound arguments
  */
 template <typename Res, typename... Args, typename... BoundArgs>
 class Functor<Res(Args...), BoundArgs...> {

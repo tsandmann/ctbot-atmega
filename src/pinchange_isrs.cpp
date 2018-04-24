@@ -36,7 +36,7 @@ using namespace avr;
 ISR(INT1_vect) {
     const auto timer(*Timer::get_timer());
 
-    /* wheel encoder right */
+    /* right wheel encoder */
     Encoder::isr<INT1_vect_num, Encoder::DATA_ARRAY_SIZE>(DigitalSensors::enc_data_r_, &DigitalSensors::enc_r_idx_, timer);
 }
 
@@ -53,7 +53,7 @@ ISR(PCINT1_vect) {
         }
     }
 
-    /* wheel encoder left */
+    /* left wheel encoder */
     if (CtBotConfig::ENC_L_REG::PORT == CtBotConfig::PORT_B::PORT && CtBotConfig::ENC_L_PIN != 2) {
         const bool enc_l_value((*PTR_8(CtBotConfig::ENC_L_REG::PINR) >> CtBotConfig::ENC_L_PIN) & 1);
         if (enc_l_value != enc_l_last) {
@@ -70,7 +70,7 @@ ISR(PCINT2_vect) {
 
     const auto timer(*Timer::get_timer());
 
-    /* wheel encoder left */
+    /* left wheel encoder */
     if (CtBotConfig::ENC_L_REG::PORT == CtBotConfig::PORT_C::PORT) {
         const bool enc_l_value((*PTR_8(CtBotConfig::ENC_L_REG::PINR) >> CtBotConfig::ENC_L_PIN) & 1);
         if (enc_l_value != enc_l_last) {

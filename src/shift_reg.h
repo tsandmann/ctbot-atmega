@@ -35,18 +35,18 @@ class ShiftReg {
 public:
     ShiftReg();
     /**
-     * @brief Shifts out 8 bit of data
-     * @param[in] data the data to be shifted out
+     * @brief Shift out 8 bit of data
+     * @param[in] data: The data to be shifted out
      */
     void out(uint8_t data) const {
         out(data, 0, 0);
     }
 
     /**
-     * @brief Shifts out 8 bit of data
-     * @param[in] data the data to be shifted out
-     * @param[in] pins_to_set a mask of pins to be set to high after the shift operation
-     * @param[in] pins_to_clear a mask of pins to be set to low after the shift operation
+     * @brief Shift out 8 bit of data
+     * @param[in] data: The data to be shifted out
+     * @param[in] pins_to_set: A mask of pins to be set to high after the shift operation
+     * @param[in] pins_to_clear: A mask of pins to be set to low after the shift operation
      */
     void out(uint8_t data, const uint8_t pins_to_set, const uint8_t pins_to_clear = 0) const;
 };

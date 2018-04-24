@@ -48,7 +48,7 @@ namespace avr {
 class StdioWrapper {
 public:
     /**
-     * @brief Constructs a new StdioWrapper object
+     * @brief Construct a new StdioWrapper object
      */
     StdioWrapper() {
         stdout_buf.put = _putchar;
@@ -64,14 +64,14 @@ private:
     static FILE stdout_buf;
 
     /**
-     * @brief Outputs a single character to the serial port
-     * @param[in] c Character to output
+     * @brief Output a single character to the serial port
+     * @param[in] c: Character to output
      * @return 0 on success, 1 on error
      */
     static int _putchar(char c, FILE*);
 
     /**
-     * @brief Takes a character from the serial port
+     * @brief Take a character from the serial port
      * @return The character or -1 on a read error
      * @note Blocks until a character is available
      */

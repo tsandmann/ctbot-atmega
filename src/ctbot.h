@@ -35,7 +35,7 @@ class SerialPort;
 }
 
 /**
- * @brief Namespace for all c't-Bot classes and functionality.
+ * @brief Namespace for all c't-Bot classes and functionality
  */
 namespace ctbot {
 class SerialConnectionAVR;
@@ -99,9 +99,9 @@ protected:
 
     /**
      * @brief Constructor of main class
+     * @note Constructor is protected to enforce singleton pattern
      *
      * The constructor initializes uart0 to allow early debug infos printed out there.
-     * @note Constructor is protected to enforce singleton pattern
      */
     CtBot();
 
@@ -111,7 +111,7 @@ protected:
     CtBot(CtBot&&) = delete;
 
     /**
-     * @brief Initializing of command line parser, registers the actions for every command
+     * @brief Initialize command line parser, register the actions for every command
      */
     void init_parser();
 
@@ -136,7 +136,7 @@ protected:
     void run();
 
     /**
-     * @brief Shuts everything down and puts the controller into sleed mode
+     * @brief Shut everything down and put the CPU into sleep mode
      *
      * All motors, servos, leds, sensors are stopped / shut down and all tasks are suspended.
      */
@@ -189,7 +189,7 @@ protected:
 
 public:
     /**
-     * @brief Returns a reference to the one and only instance of this class (singleton)
+     * @brief Get the one and only instance of this class (singleton)
      * @return Reference to CtBot instance
      */
     static CtBot& get_instance() {
@@ -274,7 +274,7 @@ public:
     void setup();
 
     /**
-     * @brief Starts the scheduler
+     * @brief Start the scheduler
      *
      * @startuml{CtBot_start.png}
      *  activate CtBot
@@ -294,7 +294,7 @@ public:
     void start();
 
     /**
-     * @brief Stops the scheduler
+     * @brief Stop the scheduler
      *
      * @startuml{CtBot_stop.png}
      *  activate CtBot
@@ -307,7 +307,7 @@ public:
     void stop();
 
     /**
-     * @brief Gets the sensor instance
+     * @brief Get the sensor instance
      * @return Pointer to sensor instance
      */
     auto get_sensors() const {
@@ -315,7 +315,7 @@ public:
     }
 
     /**
-     * @brief Gets the led instance
+     * @brief Get the led instance
      * @return Pointer to led instance
      */
     auto get_leds() const {
@@ -323,7 +323,7 @@ public:
     }
 
     /**
-     * @brief Gets the display instance
+     * @brief Get the display instance
      * @return Pointer to display instance
      */
     auto get_lcd() const {
@@ -331,7 +331,7 @@ public:
     }
 
     /**
-     * @brief Gets the speed controller instances of left and right motor
+     * @brief Get the speed controller instances of left and right motor
      * @return Pointer to speed controllers
      */
     auto get_speedcontrols() const {
@@ -339,7 +339,7 @@ public:
     }
 
     /**
-     * @brief Gets the servo controller intances
+     * @brief Get the servo controller intances
      * @return Pointer to servo controllers
      */
     auto get_servos() const {
@@ -347,7 +347,7 @@ public:
     }
 
     /**
-     * @brief Gets the communication interface instance
+     * @brief Get the communication interface instance
      * @return Pointer to communication interface instance
      */
     auto get_comm() const {
@@ -355,7 +355,7 @@ public:
     }
 
     /**
-     * @brief Gets the scheduler instance
+     * @brief Get the scheduler instance
      * @return Pointer to scheduler instance
      */
     auto get_scheduler() const {

@@ -31,6 +31,8 @@
 namespace ctbot {
 
 RemoteControl::RemoteControl(Rc5& rc5, uint8_t rc5_address) : rc5_(rc5), addr_(rc5_address), last_toggle_(rc5.get_toggle()), last_cmd_(rc5.get_cmd()) {
+    /* register actions for keys / RC5 codes */
+
     register_cmd(0x35 /* play */, [this] (uint8_t cmd) {
         /* Hello World */
         auto const p_ctbot(&CtBot::get_instance());

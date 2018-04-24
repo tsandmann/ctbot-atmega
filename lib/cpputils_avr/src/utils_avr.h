@@ -56,7 +56,7 @@ inline std::ostream& operator <<(std::ostream& os, const avr::FlashStringHelper*
 }
 
 /**
- * @brief Converts an address given as integer into a pointer type T*
+ * @brief Convert an address given as integer into a pointer type T*
  * @tparam T: Type of Pointer
  * @param[in] ptr: Address the returned pointer shall point to
  * @return Pointer of Type T* to Address ptr
@@ -67,7 +67,7 @@ constexpr auto PTR(const intptr_t ptr) {
 }
 
 /**
- * @brief Converts an address given as integer into a pointer of type uint8_t*
+ * @brief Convert an address given as integer into a pointer of type uint8_t*
  * @param[in] ptr: Address the returned pointer shall point to
  * @return Pointer of uint8_t* to Address ptr
  */
@@ -76,7 +76,7 @@ constexpr auto PTR_8(const intptr_t ptr) {
 }
 
 /**
- * @brief Converts an address given as integer into a pointer of type uint16_t*
+ * @brief Convert an address given as integer into a pointer of type uint16_t*
  * @param[in] ptr: Address the returned pointer shall point to
  * @return Pointer of uint16_t* to Address ptr
  */

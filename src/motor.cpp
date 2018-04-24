@@ -33,8 +33,8 @@ namespace ctbot {
 Motor::Motor(Encoder& enc, volatile uint8_t* ddr_reg_pwm, uint8_t pin_pwm, volatile uint8_t* port_reg_dir,
         volatile uint8_t* ddr_reg_dir, uint8_t pin_dir, bool invert, volatile uint16_t* ocr_reg)
         : pwm_(0), p_ocr_(ocr_reg), p_dir_port_(port_reg_dir), dir_pin_(pin_dir), invert_dir_(invert), enc_(enc) {
-    SBI(ddr_reg_pwm, pin_pwm); // pwm pin output
-    SBI(ddr_reg_dir, pin_dir); // direction pin output
+    SBI(ddr_reg_pwm, pin_pwm); // set PWM pin as output
+    SBI(ddr_reg_dir, pin_dir); // set direction pin as output
 
     /* clear on compare match, fast PWM, TOP at ICR1, prescaler 1 */
     TCCR1A = BV_8(COM1A1) | BV_8(COM1B1) | BV_8(WGM11);

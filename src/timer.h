@@ -35,11 +35,18 @@
 namespace ctbot {
 using namespace avr;
 
+/**
+ * @brief Helper class to wrapp tick counter
+ */
 class TimerIsrHelper {
 protected:
-    static uint32_t tickcount_;
+    static uint32_t tickcount_; /**< Tick counter */
 
 public:
+    /**
+     * @brief Get the tickcount object
+     * @return Pointer to tick counter
+     */
     static inline auto get_tickcount() {
         return &tickcount_;
     }
@@ -63,20 +70,24 @@ public:
  */
 class Timer {
 protected:
-    static constexpr uint32_t TICK_RATE_HZ { 1250UL };
-    static constexpr uint32_t CLOCK_PRESCALER { 64UL };
-    static constexpr intptr_t TIMER_REG { CtBotConfig::TCN_T0 }; /**< Address of counter register for timer0 */
-    static constexpr uint8_t CLEAR_COUNTER_ON_MATCH { BV_8(CtBotConfig::WGM_01) };
-    static constexpr uint8_t PRESCALE_64 { BV_8(CtBotConfig::CS_00) | BV_8(CtBotConfig::CS_01) };
-    static constexpr uint8_t COMPARE_MATCH_A_INTERRUPT_ENABLE { BV_8(CtBotConfig::OCIE_0A) };
+    static constexpr uint32_t TICK_RATE_HZ { 1250UL }; /**< Timer0 frequency in Hz */
+    static constexpr uint32_t CLOCK_PRESCALER { 64UL }; /**< Prescaler for Timer0 (divider for CPU clock) */
+    static constexpr intptr_t TIMER_REG { CtBotConfig::TCN_T0 }; /**< Address of counter register for Timer0 */
+    static constexpr uint8_t CLEAR_COUNTER_ON_MATCH { BV_8(CtBotConfig::WGM_01) }; /**< Bit mask to set clear on compare match config of Timer0 */
+    static constexpr uint8_t PRESCALE_64 { BV_8(CtBotConfig::CS_00) | BV_8(CtBotConfig::CS_01) }; /**< Bit mask to set prescaler of Timer0 to 64 */
+    static constexpr uint8_t COMPARE_MATCH_A_INTERRUPT_ENABLE { BV_8(CtBotConfig::OCIE_0A) }; /**< Bit mask to enable compare match interrupt of Timer0 */
 
 public:
+    /**
+     * @brief Initialize Timer
+     * @note Timer0 is used as timer
+     */
     static void init();
 
     /**
-     * @brief Converts timer ticks to microsecods
-     * @param[in] ticks Timer ticks to convert
-     * @param[in] timer Optional timer counter register value to improve accurancy
+     * @brief Convert timer ticks to microsecods
+     * @param[in] ticks: Timer ticks to convert
+     * @param[in] timer: Optional timer counter register value to improve accurancy
      * @return Time in microseconds
      */
     static constexpr uint32_t ticks_to_us(const uint32_t ticks, const uint8_t timer = 0) {
@@ -84,8 +95,8 @@ public:
     }
 
     /**
-     * @brief Converts timer ticks to millisecods
-     * @param[in] ticks Timer ticks to convert
+     * @brief Convert timer ticks to millisecods
+     * @param[in] ticks: Timer ticks to convert
      * @return Time in milliseconds
      */
     static constexpr uint32_t ticks_to_ms(const uint32_t ticks) {
@@ -93,8 +104,8 @@ public:
     }
 
     /**
-     * @brief Converts microsenconds to timer ticks
-     * @param[in] us Microseconds to convert
+     * @brief Convert microsenconds to timer ticks
+     * @param[in] us: Microseconds to convert
      * @return Timer ticks
      */
     static constexpr uint32_t us_to_ticks(const uint32_t us) {
@@ -102,8 +113,8 @@ public:
     }
 
     /**
-     * @brief Converts millisenconds to timer ticks
-     * @param[in] ms Milliseconds to convert
+     * @brief Convert millisenconds to timer ticks
+     * @param[in] ms: Milliseconds to convert
      * @return Timer ticks
      */
     static constexpr uint32_t ms_to_ticks(const uint32_t ms) {
@@ -111,8 +122,8 @@ public:
     }
 
     /**
-     * @brief Gets the timer tick counter
-     * @tparam T Type of pointer to tick counter
+     * @brief Get the timer tick counter value
+     * @tparam T: Type of pointer to tick counter
      * @return Current tick counter value
      */
     template <typename T = uint32_t, bool FROM_ISR = false>
@@ -131,7 +142,7 @@ public:
     }
 
     /**
-     * @brief Gets the timer's counter value
+     * @brief Get the counter reg of the timer
      * @return Pointer to timer counter register
      */
     static constexpr auto get_timer() {
@@ -139,8 +150,8 @@ public:
     }
 
     /**
-     * @brief Gets the current time in microseconds and timer ticks
-     * @param[out] ticks Reference to store current ticks value
+     * @brief Get the current time in microseconds and timer ticks
+     * @param[out] ticks: Reference to store current ticks value
      * @return Current time in us
      */
     template <typename T = uint32_t>
@@ -150,7 +161,7 @@ public:
     }
 
     /**
-     * @brief Gets the current time in microseconds
+     * @brief Get the current time in microseconds
      * @return Current time in us
      */
     template <typename T = uint32_t>
@@ -159,7 +170,7 @@ public:
     }
 
     /**
-     * @brief Gets the current time in milliseconds
+     * @brief Get the current time in milliseconds
      * @return Current time in ms
      */
     static uint32_t get_ms();

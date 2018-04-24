@@ -38,7 +38,7 @@ class CtBot;
 namespace tests {
 
 /**
- * @brief Leds test as simple chaser light with the leds
+ * @brief Led test as simple chaser light with the leds
  *
  * @startuml{LedTest.png}
  *  class LedTest {
@@ -89,7 +89,7 @@ protected:
 public:
     /**
      * @brief Constructor, creates the task, that implements the actual functionality
-     * @param[in] ctbot Reference to CtBot instance
+     * @param[in] ctbot: Reference to CtBot instance
      */
     LedTest(CtBot& ctbot);
 
@@ -183,7 +183,7 @@ protected:
 public:
     /**
      * @brief Constructor, creates the task, that implements the actual functionality
-     * @param[in] ctbot Reference to CtBot instance
+     * @param[in] ctbot: Reference to CtBot instance
      */
     LcdTest(CtBot& ctbot);
 
@@ -239,7 +239,7 @@ protected:
 public:
     /**
      * @brief Constructor, creates the task, that implements the actual functionality
-     * @param[in] ctbot Reference to CtBot instance
+     * @param[in] ctbot: Reference to CtBot instance
      */
     EnaTest(CtBot& ctbot);
 
@@ -332,7 +332,7 @@ protected:
 public:
     /**
      * @brief Constructor, creates the task, that implements the actual functionality
-     * @param[in] ctbot Reference to CtBot instance
+     * @param[in] ctbot: Reference to CtBot instance
      */
     SensorLcdTest(CtBot& ctbot);
 

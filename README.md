@@ -98,8 +98,10 @@ Consider this as experimental code. **If it breaks, you get to keep both pieces.
   * documentation is highly incomplete
 * conventions:
   * indentation is done by 4 (four) spaces for each level, **never** ever use tabs (`\t` | `HT`)
-  * follow the [C++ Core Guidelines]
+  * follow the [C++ Core Guidelines]. There are two really worth seeing talks about it: [Bjarne Stroustrup "Writing Good C++14"][CppCon2015Stroustrup] and [Herb Sutter "Writing Good C++14... By Default"][CppCon2015Sutter]
   * documentation is done with Doxygen, use [Doxygen style 1]
+    * at least all public members should be documented
+    * every task's implementation (mainly its `run()` method) should be modeled by an UML sequence diagram, e.g. as for [CtBot::run()](doc/html/CtBot_run.png)
   * more to come soon
 * ...
 
@@ -116,4 +118,6 @@ Consider this as experimental code. **If it breaks, you get to keep both pieces.
 [WikiFlash]: https://www.heise.de/ct/projekte/machmit/ctbot/wiki/Flash
 [PlantUML]: http://plantuml.com
 [C++ Core Guidelines]: https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md
+[CppCon2015Stroustrup]: https://youtu.be/1OEu9C51K2A
+[CppCon2015Sutter]: https://youtu.be/hEx5DNLWGgA
 [Doxygen style 1]: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#cppblock

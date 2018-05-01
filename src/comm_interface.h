@@ -37,7 +37,6 @@ namespace ctbot {
 class CtBot;
 class CmdParser;
 class SerialConnectionAVR;
-class SerialProtocol;
 
 enum class PrintBase : uint8_t {
     NONE 	= 0,

@@ -22,8 +22,8 @@
  * @date    15.04.2018
  */
 
-#ifndef SERIAL_CONNECTION_AVR_H_
-#define SERIAL_CONNECTION_AVR_H_
+#ifndef SRC_SERIAL_CONNECTION_AVR_H_
+#define SRC_SERIAL_CONNECTION_AVR_H_
 
 #include <serial_port.h>
 #include <streambuf>
@@ -68,4 +68,4 @@ public:
 
 } /* namespace ctbot */
 
-#endif /* SERIAL_CONNECTION_AVR_H_ */
+#endif /* SRC_SERIAL_CONNECTION_AVR_H_ */

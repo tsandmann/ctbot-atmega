@@ -175,7 +175,7 @@ std::size_t SerialConnectionAVR::receive_until(std::streambuf& buf, const std::s
                 wait_callback_(this);
             }
         }
-    } while (std::strncmp(ctbot::streambuf_helper::get_data(buffer), delim.c_str(), n) && n < size16);
+    } while (std::strncmp(streambuf_helper::get_data(buffer), delim.c_str(), n) && n < size16);
 
     return n;
 }

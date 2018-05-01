@@ -25,8 +25,6 @@
 #ifndef SRC_COMM_INTERFACE_H_
 #define SRC_COMM_INTERFACE_H_
 
-#include "serial_connection_avr.h"
-
 #include <utils_avr.h>
 #include <cstdint>
 #include <string>

@@ -100,8 +100,7 @@ protected:
     /**
      * @brief Constructor of main class
      * @note Constructor is protected to enforce singleton pattern
-     *
-     * The constructor initializes uart0 to allow early debug infos printed out there.
+     * @details The constructor initializes uart0 to allow early debug infos printed out there.
      */
     CtBot();
 
@@ -137,8 +136,7 @@ protected:
 
     /**
      * @brief Shut everything down and put the CPU into sleep mode
-     *
-     * All motors, servos, leds, sensors are stopped / shut down and all tasks are suspended.
+     * @details All motors, servos, leds, sensors are stopped / shut down and all tasks are suspended.
      */
     void shutdown();
 

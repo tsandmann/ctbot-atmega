@@ -34,9 +34,10 @@ class RC5;
 
 namespace ctbot {
 
+/**
+ * @brief Interrupt driven RC5 decoder driver
+ */
 class Rc5 {
-    friend class DigitalSensors;
-
 protected:
     struct rc5_t {
         uint16_t ticks;
@@ -54,24 +55,64 @@ protected:
     void reset();
 
 public:
-    static constexpr uint8_t DATA_ARRAY_SIZE { 16 };
-    static rc5_t input_data_[];
-    static volatile uint8_t input_idx_;
+    static constexpr uint8_t DATA_ARRAY_SIZE { 16 }; /**< Size of buffer array in byte for raw input data */
+    static rc5_t input_data_[]; /**< Raw input data buffer for IR receiver signal */
+    static volatile uint8_t input_idx_; /**< Current index in input data buffer, pointing to the latest entry */
 
+    /**
+     * @brief Construct a new Rc5 object
+     * @param[in] p_ddr: Pointer to pin direction register, only used for initialization (set to input)
+     * @param[in] p_port: Pointer to port register, only used for initialization (enable pullup)
+     * @param[in] p_mask_reg: Pointer to pin change interrupt mask register, only used for initialization (enable pin change interrupt)
+     * @param[in] pin: Pin number of the input data signal, only used for initialization
+     * @param[in] pci: Pin change interrupt index of the input data pin, only used for initialization
+     */
+    Rc5(volatile uint8_t* p_ddr, volatile uint8_t* p_port, volatile uint8_t* p_mask_reg, const uint8_t pin, const uint8_t pci);
 
-    Rc5(volatile uint8_t* p_ddr, volatile uint8_t* p_port, volatile uint8_t* p_mask_reg, uint8_t pin, const uint8_t pci);
-
+    /**
+     * @brief Destroy the Rc5 object
+     */
     ~Rc5();
 
+    /**
+     * @brief Check for new input data and process it, if available
+     * @return If a complete RC5 command is received, true is returned
+     */
     bool update();
 
-    auto get_addr() const { return rc5_addr_; }
-    auto get_cmd() const { return rc5_cmd_; }
-    auto get_toggle() const { return rc5_toggle_; }
+    /**
+     * @return Address of last received RC5 data
+     */
+    auto get_addr() const {
+        return rc5_addr_;
+    }
+
+    /**
+     * @return Command of last received RC5 data
+     */
+    auto get_cmd() const {
+        return rc5_cmd_;
+    }
+
+    /**
+     * @return Toggle bit of last received RC5 data
+     */
+    auto get_toggle() const {
+        return rc5_toggle_;
+    }
+
+    /**
+     * @brief Reset last received RC5 data
+     */
     void reset_rc5() {
         rc5_addr_ = rc5_cmd_ = 0;
     }
 
+    /**
+     * @brief ISR for RC5 pin change interrupt
+     * @tparam VECT_NUM: Number of interrupt vector (to distinguish ISRs)
+     * @tparam ARRAY_SIZE: Size of raw input data array in byte
+     */
     template <uint8_t VECT_NUM, uint8_t ARRAY_SIZE>
     static inline __attribute__((always_inline)) void isr(const bool value, rc5_t* p_data, volatile uint8_t* p_idx, const uint8_t timer) {
         const auto now(Timer::get_tickcount<uint16_t, true>());

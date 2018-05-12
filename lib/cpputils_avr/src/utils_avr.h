@@ -115,11 +115,10 @@ inline static constexpr uint16_t BV_16(const uint8_t bit) {
 
 
 /**
- * @brief
- * @tparam T:
- * @param[in] sfr:
- * @param[in] bit:
- * @return
+ * @brief Clear a bit in register given by a pointer
+ * @tparam T: Type of register (width of register)
+ * @param[in] sfr: Address of memory-mapped register as pointer
+ * @param[in] bit: Number of bit to clear (0 for LSB)
  */
 template <typename T>
 inline static void CBI(volatile T* sfr, const uint8_t bit) {
@@ -128,10 +127,10 @@ inline static void CBI(volatile T* sfr, const uint8_t bit) {
 }
 
 /**
- * @brief
- * @tparam T:
- * @param[in] sfr:
- * @param[in] bit:
+ * @brief Clear a bit in register given by an address
+ * @tparam T: Type of register (width of register)
+ * @param[in] sfr: Address of memory-mapped register as integer
+ * @param[in] bit: Number of bit to clear (0 for LSB)
  */
 template <typename T>
 inline static void CBI(intptr_t sfr, const uint8_t bit) {
@@ -141,10 +140,10 @@ inline static void CBI(intptr_t sfr, const uint8_t bit) {
 }
 
 /**
- * @brief
- * @tparam T:
- * @param[in] sfr:
- * @param[in] bit:
+ * @brief Set a bit in register given by a pointer
+ * @tparam T: Type of register (width of register)
+ * @param[in] sfr: Address of memory-mapped register as pointer
+ * @param[in] bit: Number of bit to set (0 for LSB)
  */
 template <typename T>
 inline static void SBI(volatile T* sfr, const uint8_t bit) {
@@ -153,10 +152,10 @@ inline static void SBI(volatile T* sfr, const uint8_t bit) {
 }
 
 /**
- * @brief
- * @tparam T:
- * @param[in] sfr:
- * @param[in] bit:
+ * @brief Set a bit in register given by an address
+ * @tparam T: Type of register (width of register)
+ * @param[in] sfr: Address of memory-mapped register as integer
+ * @param[in] bit: Number of bit to clear (0 for LSB)
  */
 template <typename T>
 inline static void SBI(intptr_t sfr, const uint8_t bit) {
@@ -167,8 +166,9 @@ inline static void SBI(intptr_t sfr, const uint8_t bit) {
 
 
 /**
- * @brief
- * @tparam ACTIVE:
+ * @brief Wrapper that provides a convenient RAII-style mechanism for disabling interrupts for the duration of a scoped block
+ * @tparam ACTIVE: Boolean flag to enable or disable the functionality; true per default
+ * @note This class does absolutely nothing, if ACTIVE is set to false
  */
 template <bool ACTIVE = true>
 class IntLock {
@@ -176,14 +176,23 @@ private:
     uint8_t sreg_;
 
 public:
+    /**
+     * @brief Default constructor, implemented by template specializations below
+     */
     IntLock();
 
+    /**
+     * @brief Destroy the IntLock object and releases the lock
+     */
     ~IntLock() {
         if (ACTIVE) {
             SREG = sreg_;
         }
     }
 
+    /**
+     * @brief Deleted copy assignment operator to prohibit copies
+     */
     void operator =(const IntLock&) = delete;
 };
 

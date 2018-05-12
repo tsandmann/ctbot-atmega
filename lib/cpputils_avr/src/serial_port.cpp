@@ -157,6 +157,9 @@ inline __attribute__((always_inline)) void SerialPort::isr() {
 SerialPort Uart0::port_ {};
 
 
+/**
+ * @brief Uart0 receive complete interrupt ISR
+ */
 ISR(USART0_RX_vect) {
     Uart0::get_impl()->isr();
 }

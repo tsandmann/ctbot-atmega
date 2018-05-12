@@ -33,6 +33,9 @@
 namespace ctbot {
 using namespace avr;
 
+/**
+ * @brief External interrupt request 1 ISR
+ */
 ISR(INT1_vect) {
     const auto timer(*Timer::get_timer());
 
@@ -40,6 +43,9 @@ ISR(INT1_vect) {
     Encoder::isr<INT1_vect_num, Encoder::DATA_ARRAY_SIZE>(DigitalSensors::enc_data_r_, &DigitalSensors::enc_r_idx_, timer);
 }
 
+/**
+ * @brief Pin change interrupt request 1 ISR
+ */
 ISR(PCINT1_vect) {
     static bool rc5_last { true }, enc_l_last { false };
     const auto timer(*Timer::get_timer());
@@ -65,6 +71,9 @@ ISR(PCINT1_vect) {
     SBI(&PCIFR, PCIF1); // clear int flag, because we may have handled multiple pin changes
 }
 
+/**
+ * @brief Pin change interrupt request 2 ISR
+ */
 ISR(PCINT2_vect) {
     static bool enc_l_last { false };
 

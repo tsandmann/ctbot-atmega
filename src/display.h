@@ -36,6 +36,9 @@
 namespace ctbot {
 using namespace avr;
 
+/**
+ * @brief LC Display driver implementation for devices with Hitachi HD44780
+ */
 class Display {
 protected:
     static constexpr uint8_t LINE_LENGTH = 20; /**< Size of display (length of one line) */
@@ -92,9 +95,9 @@ public:
     uint8_t print(const avr::FlashStringHelper* str) const;
 
     /**
-     * @brief Write a formatted C-string stored in flash memory to the display, starting at the current position
-     * @param[in] format: printf()-like format string stored in flash
-     * @param[in] ...: Variable argument list as for printf()
+     * @brief Write a formatted C-string stored in program memory to the display, starting at the current position
+     * @param[in] format: printf()-like format string stored in program memory
+     * @param[in] ...: Variadic argument list as for printf()
      * @return Number of written chars
      */
     uint8_t printf(const avr::FlashStringHelper* format, ...);

@@ -60,19 +60,19 @@ public:
 
     /**
      * @brief Constructs a new Pid object
-     * @param[in] input Reference to the input variable to be used
+     * @param[in] input: Reference to the input variable to be used
      * @param[out] output Reference to the output variable to be used
-     * @param[in] setpoint Reference to the setpoint variable to be used
-     * @param[in] kp (P)roportional tuning parameter
-     * @param[in] ki (I)ntegral tuning parameter
-     * @param[in] kd (D)erivative tuning parameter
-     * @param[in] direction true: output will increase when error is positive; false: the opposite
+     * @param[in] setpoint: Reference to the setpoint variable to be used
+     * @param[in] kp: (P)roportional tuning parameter
+     * @param[in] ki: (I)ntegral tuning parameter
+     * @param[in] kd: (D)erivative tuning parameter
+     * @param[in] direction: true: output will increase when error is positive; false: the opposite
      */
     Pid(pid_t& input, pid_t& output, pid_t& setpoint, const pid_t kp, const pid_t ki, const pid_t kd, const bool direction);
 
     /**
      * @brief Performs the PID calculation
-     * @param[in] time_ms Current timestamp in ms
+     * @param[in] time_ms: Current timestamp in ms
      * @return Returns true when the output is computed, false when nothing has been done
      * @note Should be called periodically, on/off and calculation frequency can be set using SetMode and SetSampleTime respectively
      */
@@ -80,31 +80,31 @@ public:
 
     /**
      * @brief Sets PID to either manual or automatic mode
-     * @param[in] new_mode Mode to set, Modes::MANUAL or Modes::AUTOMATIC
+     * @param[in] new_mode: Mode to set, Modes::MANUAL or Modes::AUTOMATIC
      * @note When a transition from manual to auto occurs, the controller is automatically initialized.
      */
     void set_mode(const Modes new_mode);
 
     /**
      * @brief Clamps the output to a specific range
-     * @param[in] min Minimum output value
-     * @param[in] max Maximum output value
+     * @param[in] min: Minimum output value
+     * @param[in] max: Maximum output value
      * @note 0-255 by default
      */
     void set_output_limits(const pid_t min, const pid_t max);
 
     /**
      * @brief Gives the user the option of changing tunings during runtime for Adaptive control
-     * @param[in] kp (P)roportional tuning parameter
-     * @param[in] ki (I)ntegral tuning parameter
-     * @param[in] kd (D)erivative tuning parameter
+     * @param[in] kp: (P)roportional tuning parameter
+     * @param[in] ki: (I)ntegral tuning parameter
+     * @param[in] kd: (D)erivative tuning parameter
      * @note This method allows the controller's dynamic performance to be adjusted.
      */
     void set_tunings(const pid_t kp, const pid_t ki, const pid_t kd);
 
     /**
      * @brief Sets the Direction, or "action" of the controller
-     * @param[in] direction true: output will increase when error is positive; false: the opposite
+     * @param[in] direction: true: output will increase when error is positive; false: the opposite
      *
      * The PID will either be connected to a DIRECT acting process (+Output leads to +Input) or a REVERSE acting process (+Output leads to -Input).
      * We need to know which one, because otherwise we may increase the output when we should be decreasing.
@@ -113,7 +113,7 @@ public:
 
     /**
      * @brief Sets the period, in milliseconds, at which the calculation is performed
-     * @param[in] new_sample_time Sample time to use in milliseconds
+     * @param[in] new_sample_time: Sample time to use in milliseconds
      * @note 100 by default
      */
     void set_sample_time(const uint16_t new_sample_time);

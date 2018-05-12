@@ -30,14 +30,19 @@
 #include <serstream>
 
 
+/** std::cout implementation */
 std::ohserialstream __cout { *avr::Uart0::get_impl() };
+
+/** std::cin implementation */
 std::ihserialstream __cin { *avr::Uart0::get_impl() };
+
 
 namespace std {
 ostream& cout { __cout };
 ostream& cerr { __cout };
 istream& cin { __cin };
 }
+
 
 namespace avr {
 

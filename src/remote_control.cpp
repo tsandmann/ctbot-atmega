@@ -85,7 +85,7 @@ RemoteControl::RemoteControl(Rc5& rc5, uint8_t rc5_address) : rc5_(rc5), addr_(r
     });
 }
 
-void RemoteControl::register_cmd(uint8_t cmd, func_t&& func) {
+void RemoteControl::register_cmd(const uint8_t cmd, func_t&& func) {
     key_mappings_[cmd] = { std::move(func) };
 }
 

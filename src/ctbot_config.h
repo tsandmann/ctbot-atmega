@@ -187,7 +187,7 @@ public:
     static constexpr uint8_t MOT_R_DIR_PIN { 7 }; /**< Pin number of right motor direction signal */
     static constexpr intptr_t MOT_L_OCR { OCR_1A }; /**< Address of left motor pwm OCR register */
     static constexpr intptr_t MOT_R_OCR { OCR_1B }; /**< Address of right motor pwm OCR register */
-    static constexpr uint16_t MOT_PWM_MAX { 16000 }; /**< Maximum PWM value for motors */
+    static constexpr uint16_t MOT_PWM_MAX { 16000 }; /**< Maximum pwm duty cycle value for motors */
 
     /* servos */
     using SERVO_1_REG = PORT_B; /**< Port and pin register addresses for servo 1 pwm signal */

@@ -64,7 +64,7 @@ public:
 
     /**
      * @brief Gets the last set servo position
-     * @return position of servo or POS_OFF, if servo turned off
+     * @return Position of servo or POS_OFF, if servo turned off
      */
     auto get() const { return position; }
 
@@ -86,7 +86,7 @@ protected:
     /**
      * @brief Calculate the pwm pulse width for a given servo position
      * @param[in] pos: Servo position to use [1; 255]
-     * @return pwm Pulse width in us
+     * @return Pwm pulse width in us
      */
     static constexpr uint16_t calc_pulse(uint8_t pos) {
         return static_cast<uint16_t>(pos) * 7 + 600;

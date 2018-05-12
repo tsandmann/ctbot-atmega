@@ -55,7 +55,7 @@ void AnalogSensors::update() {
     // data_.line[1] = analog_read(CtBotConfig::LINE_R_PIN);
 }
 
-int16_t AnalogSensors::analog_read(uint8_t pin) {
+int16_t AnalogSensors::analog_read(const uint8_t pin) const {
     // set the analog reference (high two bits of ADMUX) and select the channel (low 4 bits).
     // this also sets ADLAR (left-adjust result) to 0 (the default).
     ADMUX = BV_8(REFS0) | (pin & 0x7);
@@ -64,11 +64,11 @@ int16_t AnalogSensors::analog_read(uint8_t pin) {
     SBI(&ADCSRA, ADSC);
 
     // ADSC is cleared when the conversion finishes
-    while (bit_is_set(ADCSRA, ADSC)) {}
+    while (ADCSRA & BV_8(ADSC)) {}
 
     // read ADCL first; doing so locks both ADCL and ADCH until ADCH is read
-    const uint8_t low(ADCL);
-    const uint8_t high(ADCH);
+    const uint8_t low { ADCL };
+    const uint8_t high { ADCH };
 
     // combine the two bytes
     return (high << 8) | low;

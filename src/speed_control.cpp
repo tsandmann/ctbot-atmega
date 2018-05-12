@@ -75,14 +75,14 @@ void SpeedControl::run() {
     motor_.set(direction_ ? pwm : static_cast<int16_t>(-pwm));
 }
 
-void SpeedControl::set_parameters(float kp_, float ki_, float kd_) {
+void SpeedControl::set_parameters(const float kp, const float ki, const float kd) {
     if (! p_pid_controller_) {
         return;
     }
 
-    kp_ = kp_;
-    ki_ = ki_;
-    kd_ = kd_;
+    kp_ = kp;
+    ki_ = ki;
+    kd_ = kd;
     p_pid_controller_->set_tunings(kp_, ki_, kd_);
 }
 

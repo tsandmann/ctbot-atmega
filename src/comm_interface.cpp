@@ -34,7 +34,6 @@
 #include "display.h"
 #include "sensors.h"
 
-#include <utils_avr.h>
 #include <cmath>
 #include <iostream>
 

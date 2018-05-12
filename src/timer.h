@@ -123,7 +123,8 @@ public:
 
     /**
      * @brief Get the timer tick counter value
-     * @tparam T: Type of pointer to tick counter
+     * @tparam T: Type of pointer to tick counter, default is uint32_t
+     * @tparam FROM_ISR: Boolean flag to indicate if called from an ISR, default is false
      * @return Current tick counter value
      */
     template <typename T = uint32_t, bool FROM_ISR = false>
@@ -151,6 +152,7 @@ public:
 
     /**
      * @brief Get the current time in microseconds and timer ticks
+     * @tparam T: Type to use for tick counter, default is uint32_t
      * @param[out] ticks: Reference to store current ticks value
      * @return Current time in us
      */
@@ -162,6 +164,7 @@ public:
 
     /**
      * @brief Get the current time in microseconds
+     * @tparam T: Type to use for tick counter, default is uint32_t
      * @return Current time in us
      */
     template <typename T = uint32_t>

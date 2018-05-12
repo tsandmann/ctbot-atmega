@@ -30,6 +30,11 @@
 
 namespace ctbot {
 
+/**
+ * @brief Shift register 74HC595 driver
+ * @tparam SCK_PIN: Pin number for shift register clock input
+ * @tparam RCK_PIN: Pin number for storage register clock input
+ */
 template <uint8_t SCK_PIN, uint8_t RCK_PIN>
 class ShiftReg {
 public:

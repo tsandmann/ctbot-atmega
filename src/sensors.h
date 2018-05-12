@@ -33,19 +33,34 @@
 
 namespace ctbot {
 
+/**
+ * @brief Collection of all c't-Bot sensors
+ */
 class Sensors : public DigitalSensors, public AnalogSensors {
 protected:
     Ena ena_;
 
 public:
+    /**
+     * @brief Construct a new Sensors object
+     */
     Sensors();
 
+    /**
+     * @brief Update all sensors by calling the underlying update()-methods
+     */
     void update();
 
+    /**
+     * @brief Disable all sensors by disabling their enable transistor
+     */
     void disable_all() {
         ena_.set(EnaTypes::NONE);
     }
 
+    /**
+     * @return The current time in us
+     */
     uint32_t get_time() const {
         return Timer::get_us();
     }

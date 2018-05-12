@@ -88,6 +88,7 @@ bool CmdParser::execute_cmd(const std::string& cmd) {
 }
 
 bool CmdParser::parse(const char* in, CommInterface& comm) {
+// FIXME: store CommInterface as member?
     static std::string last_line;
 
     if (*in) {

@@ -53,10 +53,10 @@ protected:
     type func_;
 
     /**
-     * @brief
-     * @param[in] v
-     * @param args
-     * @return Res
+     * @brief Helper to call a function pointer with given args
+     * @param[in] v: void-Pointer to a function of type Res(Args...)
+     * @param args: Arguments for function to call
+     * @return Result of function calls or default-constructed Res if v is nullptr
      */
     static Res func_ptr_exec(void* v, Args... args) {
         if (v) {
@@ -68,11 +68,12 @@ protected:
     }
 
     /**
-     * @brief
-     * @tparam U
-     * @param[in] v
-     * @param args
-     * @return Res
+     * @brief Helper to execute a lambda expression with given args
+     * @tparam U: Type of lambda to call
+     * @param[in] v: Pointer to a stored lambda
+     * @param args: Arguments for lambda to execute
+     * @return Result of lambda expression
+     * @note Allocated heap memory is owned by le_
      */
     template <typename U>
     static Res lambda_ptr_exec(U* v, Args... args) {
@@ -81,10 +82,10 @@ protected:
     }
 
     /**
-     * @brief
-     * @tparam U
-     * @param[in] u
-     * @return type
+     * @brief Helper to store a lambda expression accessible as plain function pointer
+     * @tparam U: Type of lambda
+     * @param[in] u: Reference to a lambda
+     * @return Function pointer that points to a dynamically stored lambda expression
      */
     template <typename U>
     type lambda_ptr(U& u) {
@@ -225,17 +226,17 @@ public:
     }
 
     /**
-     * @brief Constructs a new Functor object
-     * @param[in] f
+     * @brief Constructs a new Functor object from a function pointer
+     * @param[in] f: The function pointer to use
      */
     Functor(Res(*f)(Args...)) noexcept : le_(reinterpret_cast<void*>(f)), p_lambda_(nullptr), size(0), func_(func_ptr_exec) {
         // std::cout << "Functor(): functor created with function pointer, size=" << size << ", this=0x" << std::hex << reinterpret_cast<intptr_t>(this) << std::dec << "\n";
     }
 
     /**
-     * @brief Constructs a new Functor object
-     * @tparam U
-     * @param[in] v
+     * @brief Constructs a new Functor object from a lambda expression
+     * @tparam U: Type of lambda
+     * @param[in] v: Lambda expression to use
      */
     template <typename U>
     Functor(U&& v) noexcept : func_(lambda_ptr(v)) {
@@ -243,9 +244,9 @@ public:
     }
 
     /**
-     * @brief
-     * @param args
-     * @return Res
+     * @brief Executes this functor by calling the referenced function or lambda
+     * @param args: Arguments to use
+     * @return Result of functor execution
      */
     Res operator()(Args... args) const {
         // std::cout << "Functor::operator()(): executing func_(), size=" << size << ", this=0x" << std::hex << reinterpret_cast<intptr_t>(this) << std::dec << "\n";
@@ -275,9 +276,9 @@ public:
     }
 
     /**
-     * @brief Constructs a new Functor object
-     * @param[in] f
-     * @param to_bind
+     * @brief Constructs a new Functor object from a function pointer
+     * @param[in] f: The function pointer to use
+     * @param to_bind: Parameters to bind
      */
     Functor(Res(*f)(Args..., BoundArgs&&...), BoundArgs&&... to_bind) noexcept : func_(
         [f, to_bind...](Args... args) {
@@ -288,10 +289,10 @@ public:
     }
 
     /**
-     * @brief Constructs a new Functor object
-     * @tparam U
-     * @param[in] v
-     * @param to_bind
+     * @brief Constructs a new Functor object from a lambda expression
+     * @tparam U: Type of lambda
+     * @param[in] v: Lambda expression to use
+     * @param to_bind: Parameters to bind
      */
     template <typename U>
     Functor(U&& v, BoundArgs&&... to_bind) noexcept : func_([&v, to_bind...](Args... args) { return v(args..., std::forward<BoundArgs&&...>(to_bind...)); }) {
@@ -299,11 +300,11 @@ public:
     }
 
     /**
-     * @brief
-     * @param args
-     * @return Res
+     * @brief Executes this functor by calling the referenced function or lambda
+     * @param args: Arguments to use
+     * @return Result of functor execution
      */
-    Res operator()(Args ...args) const {
+    Res operator()(Args... args) const {
         // std::cout << "Functor(): executing func_()...\n";
         return func_(args...);
     }

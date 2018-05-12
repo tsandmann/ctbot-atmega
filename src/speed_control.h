@@ -36,12 +36,15 @@ class Pid;
 
 namespace ctbot {
 
+/**
+ * @brief Motor speed controller
+ */
 class SpeedControl {
 protected:
     static constexpr uint16_t MAX_SPEED { 450 }; /**< Maximum possible speed in mm/s */
     static constexpr uint16_t TASK_PERIOD_MS { 1U }; /**< Scheduling period of task in ms */
 
-    static std::list<SpeedControl*> controller_list_;
+    static std::list<SpeedControl*> controller_list_; /**< List of all SpeedControl instances created */
 
     bool direction_;
     float setpoint_, input_, output_;
@@ -50,13 +53,36 @@ protected:
     Encoder& wheel_encoder_;
     Motor& motor_;
 
+    /**
+     * @brief Perform the PID controller update step
+     * @note Is called periodically by the speed controller task every TASK_PERIOD_MS ms
+     */
+    void run();
+
+    /**
+     * @brief Speed controller task implementation
+     * @note Calls run() on all SpeedControl instances
+     */
     static void controller(void*);
 
 public:
+    /**
+     * @brief Construct a new SpeedControl object
+     * @param[in] wheel_enc: Reference to wheel encoder to use for controller input (speed)
+     * @param[in] motor: Reference to motor driver to use for controller output (PWM duty cycle)
+     */
     SpeedControl(Encoder& wheel_enc, Motor& motor);
+
+    /**
+     * @brief Destroy the Speed Control object
+     */
     ~SpeedControl();
 
-    void set_speed(float speed) {
+    /**
+     * @brief Set a new desired speed
+     * @param[in] speed: Speed to set as percentage value; [-100; +100]
+     */
+    void set_speed(const float speed) {
         auto abs_speed(fabs(speed));
         if (abs_speed > 100.f) {
             abs_speed = 100.f;
@@ -65,29 +91,48 @@ public:
         direction_ = speed >= 0.f;
     }
 
+    /**
+     * @return Current speed set
+     */
     auto get_speed() const {
         return setpoint_ / (direction_ ? MAX_SPEED / 100.f : MAX_SPEED / -100.f); // convert speed to %
     }
 
+    /**
+     * @return Current wheel speed as reported by related wheel encoder
+     */
     auto get_enc_speed() const {
         return wheel_encoder_.get_speed();
     }
 
+    /**
+     * @return Current Kp parameter setting
+     */
     auto get_kp() const {
         return kp_;
     }
 
+    /**
+     * @return Current Ki parameter setting
+     */
     auto get_ki() const {
         return ki_;
     }
 
+    /**
+     * @return Current Kd parameter setting
+     */
     auto get_kd() const {
         return kd_;
     }
 
-    void set_parameters(float kp_, float ki_, float kd_);
-
-    void run();
+    /**
+     * @brief Set new parameters for underlying PID controller
+     * @param[in] kp: Proportional tuning parameter
+     * @param[in] ki: Integral tuning parameter
+     * @param[in] kd: Derivative tuning parameter
+     */
+    void set_parameters(const float kp, const float ki, const float kd);
 };
 
 } /* namespace ctbot */

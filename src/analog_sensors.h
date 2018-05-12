@@ -35,6 +35,10 @@
 namespace ctbot {
 using namespace avr;
 
+/**
+ * @brief Abstraction layer for (simple) analog sensors
+ * @note No further sensor data processing is done here, just the raw ADC values are collected.
+ */
 class AnalogSensors {
 protected:
     static constexpr auto ENA_MASK = EnaTypes::BORDER | EnaTypes::LINE; // | EnaTypes::DISTANCE;
@@ -52,20 +56,79 @@ protected:
         uint16_t raw[8];
     } data_;
 
+    /**
+     * @brief Read all the current ADC values
+     */
     void update();
-    int16_t analog_read(uint8_t pin);
+
+    /**
+     * @brief Read the ADC value of a pin
+     * @param[in] pin: The pin to read from
+     * @return ADC value in 10 bit resolution
+     */
+    int16_t analog_read(const uint8_t pin) const;
 
 public:
+    /**
+     * @brief Construct a new AnalogSensors object
+     */
     AnalogSensors();
 
-    auto get_border_l() const { return data_.border[0]; }
-    auto get_border_r() const { return data_.border[1]; }
-    auto get_distance_l() const { return data_.distance[0]; }
-    auto get_distance_r() const { return data_.distance[1]; }
-    auto get_ldr_l() const { return data_.ldr[0]; }
-    auto get_ldr_r() const { return data_.ldr[1]; }
-    auto get_line_l() const { return data_.line[0]; }
-    auto get_line_r() const { return data_.line[1]; }
+    /**
+     * @return The last value of left border sensor
+     */
+    auto get_border_l() const {
+        return data_.border[0];
+    }
+
+    /**
+     * @return The last value of right border sensor
+     */
+    auto get_border_r() const {
+         return data_.border[1];
+    }
+
+    /**
+     * @return The last value of left distance sensor
+     */
+    auto get_distance_l() const {
+        return data_.distance[0];
+    }
+
+    /**
+     * @return The last value of right distance sensor
+     */
+    auto get_distance_r() const {
+        return data_.distance[1];
+    }
+
+    /**
+     * @return The last value of left LDR sensor
+     */
+    auto get_ldr_l() const {
+        return data_.ldr[0];
+    }
+
+    /**
+     * @return The last value of right LDR sensor
+     */
+    auto get_ldr_r() const {
+        return data_.ldr[1];
+    }
+
+    /**
+     * @return The last value of left line sensor
+     */
+    auto get_line_l() const {
+        return data_.line[0];
+    }
+
+    /**
+     * @return The last value of right line sensor
+     */
+    auto get_line_r() const {
+        return data_.line[1];
+    }
 };
 
 } /* namespace ctbot */

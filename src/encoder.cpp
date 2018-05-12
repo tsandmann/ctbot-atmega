@@ -33,7 +33,7 @@
 namespace ctbot {
 using namespace avr;
 
-Encoder::Encoder(const enc_t* const p_data, const volatile uint8_t* const p_idx, volatile uint8_t* p_ddr, volatile uint8_t* p_port, uint8_t pin) :
+Encoder::Encoder(const enc_t* p_data, const volatile uint8_t* p_idx, volatile uint8_t* p_ddr, volatile uint8_t* p_port, const uint8_t pin) :
         edges_(0), last_idx_(0), speed_(0.f), speed_avg_(0.f), direction_(true), p_enc_data_(p_data), p_enc_idx_(p_idx), last_update_(0), count_(0) {
     CBI(p_ddr, pin); // set input
     CBI(p_port, pin); // disable pullup

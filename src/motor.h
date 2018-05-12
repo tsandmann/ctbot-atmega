@@ -32,11 +32,14 @@
 
 namespace ctbot {
 
+/**
+ * @brief Motor driver
+ */
 class Motor {
 protected:
-    static constexpr uint16_t PWM_PRESCALER { 1U }; /**< Clock prescaler for PWM timer */
-    static constexpr uint16_t PWM_FREQUENCY { 16129U }; /**< PWM frequency in Hz */
-    static constexpr uint16_t PWM_TOP { static_cast<uint16_t>(static_cast<float>(F_CPU) / (1.f * PWM_PRESCALER * PWM_FREQUENCY)) };
+    static constexpr uint16_t PWM_PRESCALER { 1U }; /**< Clock prescaler for pwm timer */
+    static constexpr uint16_t PWM_FREQUENCY { 16129U }; /**< Pwm frequency in Hz */
+    static constexpr uint16_t PWM_TOP { static_cast<uint16_t>(static_cast<float>(F_CPU) / (1.f * PWM_PRESCALER * PWM_FREQUENCY)) }; /**< Timer top value to achieve requested PWM frequency */
 
     int16_t pwm_;
     volatile uint16_t* const p_ocr_;
@@ -46,19 +49,44 @@ protected:
     Encoder& enc_;
 
 public:
+    /**
+     * @brief Construct a new Motor object
+     * @param[in] enc: Reference to encoder sensor of this motor (used to set direction)
+     * @param[in] ddr_reg_pwm: Pointer to pin direction register for pwm pin, only used for initialization (set to output)
+     * @param[in] pin_pwm: Pin number of the pwm signal, only used for initialization
+     * @param[in] port_reg_dir: Pointer to port register for direction pin
+     * @param[in] ddr_reg_dir: Pointer to pin direction register for direction pin, only used for initialization (set to output)
+     * @param[in] pin_dir: Pin number of the direction signal
+     * @param[in] invert: Invert motor direction setting; set to true, if wheel turning direction should be inverted
+     * @param[in] ocr_reg: Pointer to output compare register of timer for pwm
+     */
     Motor(Encoder& enc, volatile uint8_t* ddr_reg_pwm, uint8_t pin_pwm, volatile uint8_t* port_reg_dir, volatile uint8_t* ddr_reg_dir,
-        uint8_t pin_dir, bool invert, volatile uint16_t* ocr_reg);
+        uint8_t pin_dir, const bool invert, volatile uint16_t* ocr_reg);
 
+    /**
+     * @brief Set a new pwm duty cycle
+     * @param[in] pwm: New pwm duty cycle to set; [- CtBotConfig::MOT_PWM_MAX; CtBotConfig::MOT_PWM_MAX]
+     */
     void set(int16_t pwm);
 
-    void set(float pwm_pc) {
-        set(static_cast<int16_t>(pwm_pc * CtBotConfig::MOT_PWM_MAX));
+    /**
+     * @brief Set a new pwm duty cycle relative to max speed
+     * @param[in] pwm_rel: New pwm duty cycle as ratio of max speed; [-1; +1]
+     */
+    void set(float pwm_rel) {
+        set(static_cast<int16_t>(pwm_rel * CtBotConfig::MOT_PWM_MAX));
     }
 
+    /**
+     * @return Current pwm duty cycle set; [- CtBotConfig::MOT_PWM_MAX; CtBotConfig::MOT_PWM_MAX]
+     */
     auto get() const {
         return pwm_;
     }
 
+    /**
+     * @brief Print current status as debug output
+     */
     void print_status() const;
 };
 

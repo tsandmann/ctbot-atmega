@@ -229,7 +229,7 @@ void CtBot::init_parser() {
             p_this->serial_print(p_this->p_sensors_->get_error());
         } else if (args == "led") {
             p_this->p_comm_->debug_print("0x");
-            p_this->serial_print(static_cast<uint8_t>(p_this->p_leds_->get()), PrintBase::HEX);
+            p_this->serial_print_base(static_cast<uint8_t>(p_this->p_leds_->get()), PrintBase::HEX);
         } else if (args == "tasks") {
             p_this->get_scheduler()->print_task_list(std::cout);
         } else {

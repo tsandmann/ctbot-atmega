@@ -33,6 +33,9 @@
 
 namespace ctbot {
 
+/**
+ * @brief Enum class for all enable signals
+ */
 enum class EnaTypes : uint8_t {
     NONE 		= 0,
     DISTANCE	= 1 << 0,
@@ -45,16 +48,33 @@ enum class EnaTypes : uint8_t {
     EXTENSION_2	= 1 << 7,
 };
 
-inline constexpr EnaTypes operator | (EnaTypes a, EnaTypes b) {
-    return static_cast<EnaTypes>(static_cast<uint8_t>(a) | static_cast<uint8_t>(b));
+/**
+ * @brief OR operator for EnaTypes
+ * @param[in] lhs: Left hand side operand
+ * @param[in] rhs: Right hand side operand
+ * @return lhs OR rhs
+ */
+inline constexpr EnaTypes operator | (EnaTypes lhs, EnaTypes rhs) {
+    return static_cast<EnaTypes>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs));
 }
 
-inline constexpr EnaTypes operator & (EnaTypes a, EnaTypes b) {
-    return static_cast<EnaTypes>(static_cast<uint8_t>(a) & static_cast<uint8_t>(b));
+/**
+ * @brief AND operator for EnaTypes
+ * @param[in] lhs: Left hand side operand
+ * @param[in] rhs: Right hand side operand
+ * @return lhs AND rhs
+ */
+inline constexpr EnaTypes operator & (EnaTypes lhs, EnaTypes rhs) {
+    return static_cast<EnaTypes>(static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs));
 }
 
-inline constexpr EnaTypes operator ~ (EnaTypes a) {
-    return static_cast<EnaTypes>(~static_cast<uint8_t>(a));
+/**
+ * @brief NOT operator for EnaTypes
+ * @param[in] rhs: Right hand side operand
+ * @return NOT rhs
+ */
+inline constexpr EnaTypes operator ~ (EnaTypes rhs) {
+    return static_cast<EnaTypes>(~static_cast<uint8_t>(rhs));
 }
 
 /**
@@ -81,7 +101,7 @@ public:
 
     /**
      * @brief Enables one or more transistors given by the mask enable
-     * @param[in] enable bitmask of ENA transistors to be enabled
+     * @param[in] enable: Bitmask of ENA transistors to be enabled
      * @note Transistors not selected by the mask are uneffected
      */
     void on(EnaTypes enable) {
@@ -91,7 +111,7 @@ public:
 
     /**
      * @brief Disables one or more transistors given by the mask disable
-     * @param[in] disable bitmask of ENA transistors to be disabled
+     * @param[in] disable: Bitmask of ENA transistors to be disabled
      * @note Transistors not selected by the mask are uneffected
      */
     void off(EnaTypes disable) {
@@ -101,7 +121,7 @@ public:
 
     /**
      * @brief Enables the transistors given by the mask, disabled the other ones
-     * @param[in] mask bitmask of ENA transistors to be set
+     * @param[in] mask: Bitmask of ENA transistors to be set
      */
     void set(EnaTypes mask) {
         status_ = mask;

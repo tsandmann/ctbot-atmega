@@ -100,8 +100,7 @@ protected:
     /**
      * @brief Constructor of main class
      * @note Constructor is protected to enforce singleton pattern
-     *
-     * The constructor initializes uart0 to allow early debug infos printed out there.
+     * @details The constructor initializes uart0 to allow early debug infos printed out there.
      */
     CtBot();
 
@@ -137,10 +136,33 @@ protected:
 
     /**
      * @brief Shut everything down and put the CPU into sleep mode
-     *
-     * All motors, servos, leds, sensors are stopped / shut down and all tasks are suspended.
+     * @details All motors, servos, leds, sensors are stopped / shut down and all tasks are suspended.
      */
     void shutdown();
+
+    /**
+     * @brief Helper function to print data to serial debug line
+     * @tparam T: Type of data
+     * @param[in] data: The data to print
+     */
+    template <typename T>
+    void serial_print(T data) {
+        p_comm_->debug_print(data, PrintBase::DEC);
+    }
+
+    /**
+     * @brief Helper function to print data to serial debug line
+     * @tparam T: Type of data
+     * @tparam Args: Types of additional args
+     * @param[in] data: The data to print first
+     * @param[in] args: The data to print afterwards
+     */
+    template <typename T, typename... Args>
+    void serial_print(T data, Args... args) {
+        p_comm_->debug_print(data, PrintBase::DEC);
+        p_comm_->debug_print(' ');
+        serial_print<Args...>(args...);
+    }
 
     /**
      * @brief Helper function to print data to serial debug line
@@ -149,42 +171,23 @@ protected:
      * @param[in] base: Base of numeral system the data shall be printed in
      */
     template <typename T>
-    void serial_print(T data, const PrintBase base = PrintBase::DEC) {
+    void serial_print_base(T data, const PrintBase base = PrintBase::DEC) {
         p_comm_->debug_print(data, base);
     }
 
     /**
      * @brief Helper function to print data to serial debug line
-     * @tparam T: Type of data_l
-     * @tparam U: Type of data_r
-     * @param[in] data_l: The data to print first (left)
-     * @param[in] data_r: The data to print second (right)
+     * @tparam T: Type of data
+     * @tparam Args: Types of additional args
+     * @param[in] data: The data to print first
+     * @param[in] args: The data to print afterwards
      * @param[in] base: Base of numeral system the data shall be printed in
      */
-    template <typename T, typename U>
-    void serial_print(T data_l, U data_r, const PrintBase base = PrintBase::DEC) {
-        p_comm_->debug_print(data_l, base);
+    template <typename T, typename... Args>
+    void serial_print_base(T data, Args... args, const PrintBase base = PrintBase::DEC) {
+        p_comm_->debug_print(data, base);
         p_comm_->debug_print(' ');
-        p_comm_->debug_print(data_r, base);
-    }
-
-    /**
-     * @brief Helper function to print data to serial debug line
-     * @tparam T: Type of data_l
-     * @tparam U: Type of data_r
-     * @tparam V: Type of data_n
-     * @param[in] data_l: The data to print first (left)
-     * @param[in] data_r: The data to print second (middle)
-     * @param[in] data_n: The data to print third (right)
-     * @param[in] base: Base of numeral system the data shall be printed in
-     */
-    template <typename T, typename U, typename V>
-    void serial_print(T data_l, U data_r, V data_n, const PrintBase base = PrintBase::DEC) {
-        p_comm_->debug_print(data_l, base);
-        p_comm_->debug_print(' ');
-        p_comm_->debug_print(data_r, base);
-        p_comm_->debug_print(' ');
-        p_comm_->debug_print(data_n, base);
+        serial_print<Args...>(args..., base);
     }
 
 public:

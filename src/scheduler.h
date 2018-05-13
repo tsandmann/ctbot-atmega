@@ -27,7 +27,6 @@
 
 #include "ctbot_config.h"
 
-#include <functor.h>
 #include <cstdint>
 #include <queue>
 #include <vector>

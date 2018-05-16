@@ -23,8 +23,8 @@
  * @date    15.04.2018
  */
 
-#ifndef SRC_UTILS_H_
-#define SRC_UTILS_H_
+#ifndef SRC_UTILS_AVR_H_
+#define SRC_UTILS_AVR_H_
 
 #include <cstdint>
 #include <ostream>
@@ -235,4 +235,4 @@ struct ExecuteAtomic {
 
 } /* namespace avr */
 
-#endif /* SRC_UTILS_H_ */
+#endif /* SRC_UTILS_AVR_H_ */

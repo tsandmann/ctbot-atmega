@@ -37,15 +37,15 @@ namespace ctbot {
  * @brief Enum class for all enable signals
  */
 enum class EnaTypes : uint8_t {
-    NONE 		= 0,
-    DISTANCE	= 1 << 0,
-    WHEEL_ENC	= 1 << 1,
-    TRANSPORT	= 1 << 2,
-    BORDER		= 1 << 3,
-    SHUTTER		= 1 << 4,
-    LINE		= 1 << 5,
-    EXTENSION_1	= 1 << 6,
-    EXTENSION_2	= 1 << 7,
+    NONE        = 0,
+    DISTANCE    = 1 << 0,
+    WHEEL_ENC   = 1 << 1,
+    TRANSPORT   = 1 << 2,
+    BORDER      = 1 << 3,
+    SHUTTER     = 1 << 4,
+    LINE        = 1 << 5,
+    EXTENSION_1 = 1 << 6,
+    EXTENSION_2 = 1 << 7,
 };
 
 /**

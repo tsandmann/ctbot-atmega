@@ -55,7 +55,7 @@ protected:
     void reset();
 
 public:
-    static constexpr uint8_t DATA_ARRAY_SIZE { 16 }; /**< Size of buffer array in byte for raw input data */
+    static constexpr uint8_t DATA_ARRAY_SIZE { 32 }; /**< Size of buffer array in byte for raw input data */
     static rc5_t input_data_[]; /**< Raw input data buffer for IR receiver signal */
     static volatile uint8_t input_idx_; /**< Current index in input data buffer, pointing to the latest entry */
 

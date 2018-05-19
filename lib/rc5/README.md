@@ -13,5 +13,5 @@ stop bit S2 as an extension to the command value.
 
 See also http://www.sbprojects.com/knowledge/ir/rc5.php
 
-This library if a fork of the original [RC5 library by guyc](https://github.com/guyc/RC5) - it is adapted
+This library is a fork of the original [RC5 library by guyc](https://github.com/guyc/RC5) - it is adapted
 for use with the c't-Bot ATmega framework and ported to C++14.

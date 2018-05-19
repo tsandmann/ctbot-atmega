@@ -31,13 +31,13 @@
 namespace ctbot {
 using namespace avr;
 
-bool Servo::initialized { false };
+bool Servo::initialized_ { false };
 
-Servo::Servo(ID num, volatile uint8_t* p_ddr, uint8_t pin, volatile uint16_t* p_ocr_reg) : id { num }, p_ocr { p_ocr_reg }, position { POS_OFF } {
+Servo::Servo(ID num, volatile uint8_t* p_ddr, uint8_t pin, volatile uint16_t* p_ocr_reg) : id_ { num }, p_ocr_ { p_ocr_reg }, position_ { POS_OFF } {
     SBI(p_ddr, pin); // set servo pin as output
 
-    if (! initialized) {
-        initialized = true;
+    if (! initialized_) {
+        initialized_ = true;
         GPIOR0 = 0; // both servos shut off
         TCNT3 = 0; // TIMER3 init
         ICR3 = 40000UL;
@@ -52,21 +52,21 @@ Servo::Servo(ID num, volatile uint8_t* p_ddr, uint8_t pin, volatile uint16_t* p_
 void Servo::set(uint8_t pos) {
     if (pos == POS_OFF) {
         /* set pwm pin low on next overflow */
-        if (id == ID::SERVO_1) {
+        if (id_ == ID::SERVO_1) {
             CBI(&GPIOR0, static_cast<uint8_t>(0U));
         } else {
             CBI(&GPIOR0, static_cast<uint8_t>(1U));
         }
     } else {
-        *p_ocr = calc_ocr(pos);
-        if (id == ID::SERVO_1) {
+        *p_ocr_ = calc_ocr(pos);
+        if (id_ == ID::SERVO_1) {
             SBI(&GPIOR0, static_cast<uint8_t>(0U));
         } else {
             SBI(&GPIOR0, static_cast<uint8_t>(1U));
         }
-        TIMSK3 |= BV_8(ICF3) | (id == ID::SERVO_1 ? BV_8(OCIE3A) : BV_8(OCIE3B)); // Input Capture Interrupt Enable, Output Compare A Match Interrupt Enable
+        TIMSK3 |= BV_8(ICF3) | (id_ == ID::SERVO_1 ? BV_8(OCIE3A) : BV_8(OCIE3B)); // Input Capture Interrupt Enable, Output Compare A Match Interrupt Enable
     }
-    position = pos;
+    position_ = pos;
 }
 
 

@@ -66,13 +66,13 @@ public:
      * @brief Gets the last set servo position
      * @return Position of servo or POS_OFF, if servo turned off
      */
-    auto get() const { return position; }
+    auto get() const { return position_; }
 
 protected:
-    const ID id; /**< Servo ID: ID::SERVO_1 or ID::SERVO_2 */
-    volatile uint16_t* const p_ocr; /**< Pointer to OCR timer register for this servo */
-    uint8_t position; /**< Target position for servo */
-    static bool initialized; /**< Flag, if at least one servo has been initialized */
+    const ID id_; /**< Servo ID: ID::SERVO_1 or ID::SERVO_2 */
+    volatile uint16_t* const p_ocr_; /**< Pointer to OCR timer register for this servo */
+    uint8_t position_; /**< Target position for servo */
+    static bool initialized_; /**< Flag, if at least one servo has been initialized */
 
     /**
      * @brief Create a servo instance for given servo number

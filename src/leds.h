@@ -38,15 +38,15 @@ namespace ctbot {
  *
  */
 enum class LedTypes : uint8_t {
-    NONE 	= 0,
-    RIGHT	= 1 << 0,
-    LEFT	= 1 << 1,
-    RED		= 1 << 2,
-    ORANGE	= 1 << 3,
-    YELLOW	= 1 << 4,
-    GREEN	= 1 << 5,
-    BLUE	= 1 << 6,
-    WHITE	= 1 << 7,
+    NONE    = 0,
+    RIGHT   = 1 << 0,
+    LEFT    = 1 << 1,
+    RED     = 1 << 2,
+    ORANGE  = 1 << 3,
+    YELLOW  = 1 << 4,
+    GREEN   = 1 << 5,
+    BLUE    = 1 << 6,
+    WHITE   = 1 << 7,
 };
 
 /**

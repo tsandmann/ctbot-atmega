@@ -51,8 +51,8 @@ protected:
      */
     struct Task {
         uint16_t id_; /**< ID of task */
-        uint16_t period_; /**< Execution period of task in ms */
-        uint32_t next_runtime_; /**< Next runtime of task in ms */
+        uint16_t period_; /**< Execution period of task in timer ticks */
+        uint32_t next_runtime_; /**< Next runtime of task in timer ticks */
         bool active_; /**< Flag indicating if task is runnable (true) or blocked (false) */
         task_func_t func_; /**< Function pointer to the task's implementation */
         task_func_data_t func_data_; /**< Pointer to additional data for the task */
@@ -70,7 +70,7 @@ protected:
          * @brief Construct a new Task object and set next runtime
          * @param[in] id: ID of task
          * @param[in] period: Execution period of task in ms
-         * @param[in] next_run: Next runtime of task in ms
+         * @param[in] next_run: Next runtime of task in timer ticks
          * @param[in] func: Function pointer to the task's implementation
          * @param[in] func_data: Pointer to additional data for the task
          */

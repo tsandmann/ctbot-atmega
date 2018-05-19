@@ -61,9 +61,9 @@ void Scheduler::run() {
         }
         // std::cout << "Scheduler::run(): now=" << now << " ticks \n";
         if (task.active_) {
-            // std::cout << "Scheduler::run(): executing function with period " << task.period_ << " ms.\n";
+            // std::cout << "Scheduler::run(): executing function with period " << Timer::ticks_to_us(task.period_) << " us.\n";
             task.func_(task.func_data_);
-            // std::cout << "Scheduler::run(): function with period " << task.period_ << " ms done.\n";
+            // std::cout << "Scheduler::run(): function with period " << Timer::ticks_to_us( task.period_) << " us done.\n";
         }
         Task new_task { task };
         new_task.next_runtime_ = now + new_task.period_;

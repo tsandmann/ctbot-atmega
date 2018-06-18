@@ -50,6 +50,7 @@ Consider this as experimental code. **If it breaks, you get to keep both pieces.
 
 1. install PlatformIO core as described [here][PIOInstall]
     * can be skipped, if using VS Code IDE with [PlatformIO extension][PlatformIOVSC]
+    * if you don't want to use PlatformIO core, see [manual build](#manual-build) for setup
 1. clone this git repository: `git clone https://github.com/tsandmann/ctbot-atmega`
 1. change to cloned repo: `cd ctbot-atmega`
 1. initialize build system for...
@@ -90,7 +91,7 @@ Consider this as experimental code. **If it breaks, you get to keep both pieces.
 
 ## Notices
 
-* if you use the ATmega with a 20 MHz clock, set `board_f_cpu` in [platformio.ini](platformio.ini) to `20000000UL`
+* if you use the ATmega with a 20 MHz clock, set `board_build.f_cpu` in [platformio.ini](platformio.ini) to `20000000UL`
 * for a c't-Bot with the *hardware SPI patch*, set `CtBotConfig::ENC_L_USE_PC5` in [ctbot_config.h](src/ctbot_config.h) to `true`
 * to build the documentation with Doxygen: `doxygen Doxyfile`
   * [PlantUML] has to be installed, to build the UML diagrams
@@ -104,6 +105,27 @@ Consider this as experimental code. **If it breaks, you get to keep both pieces.
     * every task's implementation (mainly its `run()` method) should be modeled by an UML sequence diagram, e.g. as for [CtBot::run()](doc/html/CtBot_run.png)
   * more to come soon
 * ...
+
+## Manual Build
+
+1. this is currently untested
+1. install a C++ compiler for the avr architecture, e.g. avr-g++ with avr-libc. It has to be capable to compile at least C++14 (no further libraries are needed).
+1. compile the following files from these subdirectories of the project:
+    * `src/*.cpp`
+    * `lib/cpputils_avr/src/*.cpp`
+    * `lib/pid/*.cpp`
+    * `lib/rc5/*.cpp`
+    * `lib/ulibcpp/src/*.cpp`
+    * `lib/ulibcpp/src/abi/abi.cpp`
+1. add the following subdirectories to your compiler include path:
+    * `src/`
+    * `lib/cpputils_avr/src/`
+    * `lib/pid/`
+    * `lib/rc5/`
+    * `lib/ulibcpp/src/`
+1. further necessary compiler flags: `-fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++14 -Os -Wall -ffunction-sections -fdata-sections -flto -mmcu=atmega1284p -Wextra -DF_CPU=16000000UL` (at least these are tested and known to work)
+1. necessary linker flags: `-mmcu=atmega1284p -Wl,--gc-sections -flto -fuse-linker-plugin -lm` (if you link with `avr-g++`)
+1. create an intel-hex file for avrdude with: `avr-objcopy -O ihex -R .eeprom YOUR_OUTPUT.elf YOUR_OUTPUT.hex`
 
 [ctBot]: https://www.heise.de/ct/artikel/c-t-Bot-und-c-t-Sim-284119.html
 [ArduinoCore]: https://github.com/arduino/ArduinoCore-avr

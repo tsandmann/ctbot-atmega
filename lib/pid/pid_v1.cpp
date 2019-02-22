@@ -10,19 +10,19 @@
  * based on Arduino PID Library - Version 1.1.1 by Brett Beauregard <br3ttb@gmail.com> brettbeauregard.com, licensed under a GPLv3 License
  */
 
-#include "PID_v1.h"
+#include "pid_v1.h"
 
 
-Pid::Pid(pid_t& input, pid_t& output, pid_t &setpoint, const pid_t kp, const pid_t ki, const pid_t kd, const bool direction) :
-        input_ { input }, output_ { output }, setpoint_ { setpoint }, out_min_ { 0 }, out_max_ { 255 }, in_auto_ { false },
-        direction_ { direction }, sample_time_ { 100 }, last_time_ { 0 } {
+Pid::Pid(pid_t& input, pid_t& output, pid_t& setpoint, const pid_t kp, const pid_t ki, const pid_t kd, const bool direction)
+    : input_ { input }, output_ { output }, setpoint_ { setpoint }, out_min_ { 0 }, out_max_ { 255 }, in_auto_ { false }, direction_ { direction },
+      sample_time_ { 100 }, last_time_ { 0 } {
     set_tunings(kp, ki, kd);
 
     initialize();
 }
 
 bool Pid::compute(const uint32_t time_ms) {
-    if (! in_auto_) {
+    if (!in_auto_) {
         return false;
     }
 
@@ -73,7 +73,7 @@ void Pid::set_tunings(const pid_t kp, const pid_t ki, const pid_t kd) {
     ki_ = ki * sample_time_s;
     kd_ = kd / sample_time_s;
 
-    if (! direction_) {
+    if (!direction_) {
         kp_ = (0.f - kp_);
         ki_ = (0.f - ki_);
         kd_ = (0.f - kd_);
@@ -111,7 +111,7 @@ void Pid::set_output_limits(const pid_t min, const pid_t max) {
 
 void Pid::set_mode(const Modes new_mode) {
     const bool new_auto { new_mode == Modes::AUTOMATIC };
-    if (new_auto && ! in_auto_) {
+    if (new_auto && !in_auto_) {
         /* we just went from manual to auto mode */
         initialize();
     }

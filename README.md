@@ -143,3 +143,4 @@ Consider this as experimental code. **If it breaks, you get to keep both pieces.
 [CppCon2015Stroustrup]: https://youtu.be/1OEu9C51K2A
 [CppCon2015Sutter]: https://youtu.be/hEx5DNLWGgA
 [Doxygen style 1]: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#cppblock
+

@@ -148,3 +148,4 @@ _Note for Atom IDE users:_ When installed via Atom package, Bash (Shell) used in
 [CppCon2015Sutter]: https://youtu.be/hEx5DNLWGgA
 [Doxygen style 1]: https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#cppblock
 
+

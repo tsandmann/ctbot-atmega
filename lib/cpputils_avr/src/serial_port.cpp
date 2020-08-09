@@ -70,17 +70,14 @@ void SerialPort::end() {
 }
 
 void SerialPort::flush() const {
-    while (bit_is_clear(UCSR0A, TXC0)) {}
+    while (bit_is_clear(UCSR0A, TXC0)) {
+    }
     // if we get here the hardware finished tranmission (TXC is set)
 }
 
 int16_t SerialPort::read() {
     ExecuteAtomic<std::is_same<uint8_t, rx_buf_idx_t>::value> x;
-    const rx_buf_idx_t head {
-        x([this]() {
-            return rx_buf_head_;
-        })
-    };
+    const rx_buf_idx_t head { x([this]() { return rx_buf_head_; }) };
 
     if (head == rx_buf_tail_) {
         // if the head isn't ahead of the tail, we don't have any characters
@@ -90,9 +87,7 @@ int16_t SerialPort::read() {
         const rx_buf_idx_t new_tail { static_cast<rx_buf_idx_t>(static_cast<rx_buf_idx_t>(rx_buf_tail_ + 1U) % sizeof(rx_buffer_)) };
 
         ExecuteAtomic<std::is_same<uint8_t, rx_buf_idx_t>::value> x;
-        x([this, new_tail]() {
-            rx_buf_tail_ = new_tail;
-        });
+        x([this, new_tail]() { rx_buf_tail_ = new_tail; });
 
         return static_cast<int16_t>(c);
     }
@@ -100,7 +95,7 @@ int16_t SerialPort::read() {
 
 int16_t SerialPort::read(void* buffer, const size_t length) {
     uint8_t* ptr { reinterpret_cast<uint8_t*>(buffer) };
-    size_t n { 0 };
+    size_t n {};
     while (n < length) {
         const int16_t c { read() };
         if (c < 0) {
@@ -114,7 +109,8 @@ int16_t SerialPort::read(void* buffer, const size_t length) {
 
 int16_t SerialPort::write(uint8_t data) const {
     /* wait for empty transmit buffer */
-    while (! (UCSR0A & (1 << UDRE0))) {}
+    while (!(UCSR0A & (1 << UDRE0))) {
+    }
 
     /* put data into buffer, sends the data */
     UDR0 = data;
@@ -127,11 +123,11 @@ int16_t SerialPort::write(uint8_t data) const {
 
 int16_t SerialPort::write(const void* buffer, const size_t length) const {
     const uint8_t* ptr { reinterpret_cast<const uint8_t*>(buffer) };
-    for (size_t i(0U); i < length; ++i) {
+    for (size_t i {}; i < length; ++i) {
         write(*ptr++);
     }
     return length;
-}
+} // namespace avr
 
 inline __attribute__((always_inline)) void SerialPort::isr() {
     if (bit_is_clear(UCSR0A, UPE0)) {

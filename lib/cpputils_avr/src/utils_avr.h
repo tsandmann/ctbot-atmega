@@ -23,8 +23,7 @@
  * @date    15.04.2018
  */
 
-#ifndef SRC_UTILS_AVR_H_
-#define SRC_UTILS_AVR_H_
+#pragma once
 
 #include <cstdint>
 #include <ostream>
@@ -42,7 +41,7 @@ namespace avr {
 class FlashStringHelper;
 #define F(string_literal) (reinterpret_cast<const avr::FlashStringHelper*>(PSTR(string_literal)))
 
-inline std::ostream& operator <<(std::ostream& os, const avr::FlashStringHelper* v) {
+inline std::ostream& operator<<(std::ostream& os, const avr::FlashStringHelper* v) {
     auto ptr(reinterpret_cast<PGM_P>(v));
     while (true) {
         const uint8_t c { pgm_read_byte(ptr++) };
@@ -193,21 +192,21 @@ public:
     /**
      * @brief Deleted copy assignment operator to prohibit copies
      */
-    void operator =(const IntLock&) = delete;
+    void operator=(const IntLock&) = delete;
 };
 
 /**
  * @brief Specialization of constructor for ACTIVE == false
  * @note Does nothing
  */
-template<>
+template <>
 inline IntLock<false>::IntLock() {}
 
 /**
  * @brief Specialization of constructor for ACTIVE == true
  * @note Clears global interrupt flag
  */
-template<>
+template <>
 inline IntLock<true>::IntLock() : sreg_ { SREG } {
     __builtin_avr_cli();
 }
@@ -228,11 +227,9 @@ struct ExecuteAtomic {
      */
     template <typename F>
     auto operator()(F func) const -> decltype(func()) {
-        IntLock<! FROM_ISR> lock;
+        IntLock<!FROM_ISR> lock;
         return func();
     }
 };
 
 } /* namespace avr */
-
-#endif /* SRC_UTILS_AVR_H_ */

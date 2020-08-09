@@ -53,8 +53,10 @@ public:
      * @brief Create a servo instance for given servo ID
      * @param[in] num: ID of servo (ID::SERVO_1 or ID::SERVO_2)
      */
-    Servo(ID num) : Servo(num, num == ID::SERVO_1 ? PTR_8(CtBotConfig::SERVO_1_REG::DDR) : PTR_8(CtBotConfig::SERVO_2_REG::DDR),
-        num == ID::SERVO_1 ? CtBotConfig::SERVO_1_PIN : CtBotConfig::SERVO_2_PIN, num == ID::SERVO_1 ? PTR_16(CtBotConfig::SERVO_1_OCR) : PTR_16(CtBotConfig::SERVO_2_OCR)) {}
+    Servo(ID num)
+        : Servo(num, num == ID::SERVO_1 ? PTR_8(CtBotConfig::SERVO_1_REG::DDR) : PTR_8(CtBotConfig::SERVO_2_REG::DDR),
+            num == ID::SERVO_1 ? CtBotConfig::SERVO_1_PIN : CtBotConfig::SERVO_2_PIN,
+            num == ID::SERVO_1 ? PTR_16(CtBotConfig::SERVO_1_OCR) : PTR_16(CtBotConfig::SERVO_2_OCR)) {}
 
     /**
      * @brief Set the servo to a position
@@ -66,7 +68,9 @@ public:
      * @brief Gets the last set servo position
      * @return Position of servo or POS_OFF, if servo turned off
      */
-    auto get() const { return position_; }
+    auto get() const {
+        return position_;
+    }
 
 protected:
     const ID id_; /**< Servo ID: ID::SERVO_1 or ID::SERVO_2 */
@@ -102,8 +106,8 @@ protected:
     }
 
 private:
-    static constexpr float TIMER_PRESCALER { 8.f }; /**< Prescaler for Timer2 (divider for CPU clock) to create servo PWM frequency */
-    static constexpr float TIMER_MAX { 65535.f }; /**< Maximum value of Timer2 */
+    static constexpr float TIMER_PRESCALER { 8.f }; /**< Prescaler for Timer3 (divider for CPU clock) to create servo PWM frequency */
+    static constexpr float TIMER_MAX { 65535.f }; /**< Maximum value of Timer3 */
     static constexpr float TIMER_FACTOR { 1.f }; /**< Correction factor for timer output compare match value calculation */
 };
 

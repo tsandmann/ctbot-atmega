@@ -24,8 +24,7 @@
  * @note    Based on Arduino implementation <https://github.com/arduino/ArduinoCore-avr>
  */
 
-#ifndef SRC_SERIAL_PORT_H_
-#define SRC_SERIAL_PORT_H_
+#pragma once
 
 #include <cstdint>
 #include <cstddef>
@@ -53,7 +52,7 @@ public:
     /**
      * @brief Construct a new SerialPortBase object
      */
-    SerialPortBase() : rx_buf_head_ { 0 }, rx_buf_tail_ { 0 } {}
+    SerialPortBase() : rx_buf_head_ {}, rx_buf_tail_ {} {}
 };
 
 
@@ -158,5 +157,3 @@ public:
 };
 
 } /* namespace avr */
-
-#endif /* SRC_SERIAL_PORT_H_ */

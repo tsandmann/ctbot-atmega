@@ -33,7 +33,7 @@ uint32_t TimerIsrHelper::tickcount_ { 0UL };
 
 void Timer::init() {
     ExecuteAtomic<> x;
-    x([] () {
+    x([]() {
         uint32_t ulCompareMatch { F_CPU / TICK_RATE_HZ };
         ulCompareMatch /= CLOCK_PRESCALER;
         ulCompareMatch -= 1UL;
@@ -52,7 +52,7 @@ uint32_t Timer::get_ms() {
     return ticks_to_us(get_tickcount<uint32_t>(), *get_timer()) / 1000UL;
 }
 
-ISR(TIMER0_COMPA_vect) __attribute__ ((hot, flatten));
+ISR(TIMER0_COMPA_vect) __attribute__((hot, flatten));
 ISR(TIMER0_COMPA_vect) {
     (*TimerIsrHelper::get_tickcount())++;
 }

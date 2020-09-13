@@ -38,7 +38,7 @@ struct streambuf_helper {
     static const char* get_data(T& buf) {
         struct helper : public T {
             static auto& _get_data(T& buf) {
-                auto &buffer(reinterpret_cast<helper&>(buf));
+                auto& buffer(reinterpret_cast<helper&>(buf));
                 return buffer.data;
             }
         };
@@ -60,7 +60,7 @@ uint16_t SerialConnectionAVR::wait_for_data(const uint16_t size, const uint16_t 
     const auto timeout_us(static_cast<uint32_t>(timeout_ms) * 1000UL);
     auto running_us(now - start);
 
-    while ((bytes_available < size) && ((! timeout_ms) || (running_us < timeout_us))) {
+    while ((bytes_available < size) && ((!timeout_ms) || (running_us < timeout_us))) {
         if (wait_callback_) {
             wait_callback_(this);
         }
@@ -77,7 +77,7 @@ std::size_t SerialConnectionAVR::available() const {
 }
 
 std::size_t SerialConnectionAVR::receive(void* data, const std::size_t size) {
-    if (! size) {
+    if (!size) {
         return 0;
     }
 
@@ -85,13 +85,13 @@ std::size_t SerialConnectionAVR::receive(void* data, const std::size_t size) {
 }
 
 std::size_t SerialConnectionAVR::receive(std::streambuf& buf, const std::size_t size) {
-    if (! size) {
+    if (!size) {
         return 0;
     }
 
     uint16_t i;
     for (i = 0U; i < size; ++i) {
-        buf.sputc(io_stream_.read());
+        buf.sputc(static_cast<char>(io_stream_.read()));
     }
     return i;
 }
@@ -103,10 +103,10 @@ std::size_t SerialConnectionAVR::receive_until(void* data, const char delim, con
     do {
         const int c { io_stream_.read() };
         if (c >= 0) {
-            *ptr = c;
+            *ptr = static_cast<char>(c);
             ++n;
         } else {
-// FIXME: delay / yield?
+            // FIXME: delay / yield?
             if (wait_callback_) {
                 wait_callback_(this);
             }
@@ -123,11 +123,11 @@ std::size_t SerialConnectionAVR::receive_until(void* data, const std::string& de
     do {
         const int c { io_stream_.read() };
         if (c >= 0) {
-            *ptr = c;
+            *ptr = static_cast<char>(c);
             ++ptr;
             ++n;
         } else {
-// FIXME: delay / yield?
+            // FIXME: delay / yield?
             if (wait_callback_) {
                 wait_callback_(this);
             }
@@ -144,12 +144,12 @@ std::size_t SerialConnectionAVR::receive_until(std::streambuf& buf, const char d
     do {
         const int c { io_stream_.read() };
         if (c >= 0) {
-            tmp = c;
+            tmp = static_cast<char>(c);
             buf.sputc(tmp);
             ++n;
         } else {
             tmp = 0;
-// FIXME: delay / yield?
+            // FIXME: delay / yield?
             if (wait_callback_) {
                 wait_callback_(this);
             }
@@ -167,10 +167,10 @@ std::size_t SerialConnectionAVR::receive_until(std::streambuf& buf, const std::s
     do {
         const int c { io_stream_.read() };
         if (c >= 0) {
-            buf.sputc(c);
+            buf.sputc(static_cast<char>(c));
             ++n;
         } else {
-// FIXME: delay / yield?
+            // FIXME: delay / yield?
             if (wait_callback_) {
                 wait_callback_(this);
             }

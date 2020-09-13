@@ -68,21 +68,13 @@ void Display::set_cursor(const uint8_t row, const uint8_t column) const {
     }
 
     switch (row) {
-    case 1:
-        send_cmd(0x80 + c);
-        break;
+        case 1: send_cmd(static_cast<uint8_t>(0x80 + c)); break;
 
-    case 2:
-        send_cmd(0xc0 + c);
-        break;
+        case 2: send_cmd(static_cast<uint8_t>(0xc0 + c)); break;
 
-    case 3:
-        send_cmd(0x94 + c);
-        break;
+        case 3: send_cmd(static_cast<uint8_t>(0x94 + c)); break;
 
-    case 4:
-        send_cmd(0xd4 + c);
-        break;
+        case 4: send_cmd(static_cast<uint8_t>(0xd4 + c)); break;
     }
 }
 
@@ -111,11 +103,11 @@ uint8_t Display::print(const avr::FlashStringHelper* str) const {
 }
 
 uint8_t Display::printf(const avr::FlashStringHelper* format, ...) {
-    va_list	args;
+    va_list args;
     va_start(args, format);
 
     /* read C-string from flash memory and parse format */
-    uint8_t len(vsnprintf_P(buffer_, sizeof(buffer_), reinterpret_cast<const char*>(format), args));
+    uint8_t len { static_cast<uint8_t>(vsnprintf_P(buffer_, sizeof(buffer_), reinterpret_cast<const char*>(format), args)) };
     va_end(args);
 
     /* truncate to line length */

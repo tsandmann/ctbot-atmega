@@ -35,7 +35,7 @@ namespace ctbot {
  * @brief Abstraction layer for serial communication on AVR devices
  */
 class SerialConnectionAVR {
-// FIXME: maybe this class can be simplified a lot...
+    // FIXME: maybe this class can be simplified a lot...
 protected:
     avr::SerialPort& io_stream_;
 

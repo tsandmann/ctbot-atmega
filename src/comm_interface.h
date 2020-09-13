@@ -42,11 +42,11 @@ class SerialConnectionAVR;
  * @brief Enum class for possible bases
  */
 enum class PrintBase : uint8_t {
-    NONE    = 0,
-    BIN     = 2,
-    OCT     = 8,
-    DEC     = 10,
-    HEX     = 16,
+    NONE = 0,
+    BIN = 2,
+    OCT = 8,
+    DEC = 10,
+    HEX = 16,
 };
 
 /**

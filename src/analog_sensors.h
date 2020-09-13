@@ -42,9 +42,9 @@ using namespace avr;
 class AnalogSensors {
 protected:
     static constexpr auto ENA_MASK = EnaTypes::BORDER | EnaTypes::LINE; // | EnaTypes::DISTANCE;
-    static constexpr uint8_t PIN_MASK = BV_8(CtBotConfig::DISTANCE_L_PIN) | BV_8(CtBotConfig::DISTANCE_R_PIN)
-        | BV_8(CtBotConfig::LINE_L_PIN) | BV_8(CtBotConfig::LINE_R_PIN) | BV_8(CtBotConfig::LDR_L_PIN) | BV_8(CtBotConfig::LDR_R_PIN)
-        | BV_8(CtBotConfig::BORDER_L_PIN) | BV_8(CtBotConfig::BORDER_R_PIN);
+    static constexpr uint8_t PIN_MASK = BV_8(CtBotConfig::DISTANCE_L_PIN) | BV_8(CtBotConfig::DISTANCE_R_PIN) | BV_8(CtBotConfig::LINE_L_PIN)
+        | BV_8(CtBotConfig::LINE_R_PIN) | BV_8(CtBotConfig::LDR_L_PIN) | BV_8(CtBotConfig::LDR_R_PIN) | BV_8(CtBotConfig::BORDER_L_PIN)
+        | BV_8(CtBotConfig::BORDER_R_PIN);
 
     union {
         struct {
@@ -85,7 +85,7 @@ public:
      * @return The last value of right border sensor
      */
     auto get_border_r() const {
-         return data_.border[1];
+        return data_.border[1];
     }
 
     /**

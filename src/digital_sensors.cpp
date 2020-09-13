@@ -32,14 +32,16 @@
 namespace ctbot {
 using namespace avr;
 
-std::remove_all_extents<decltype(DigitalSensors::enc_data_l_)>::type DigitalSensors::enc_data_l_[Encoder::DATA_ARRAY_SIZE], DigitalSensors::enc_data_r_[Encoder::DATA_ARRAY_SIZE];
+std::remove_all_extents<decltype(DigitalSensors::enc_data_l_)>::type DigitalSensors::enc_data_l_[Encoder::DATA_ARRAY_SIZE],
+    DigitalSensors::enc_data_r_[Encoder::DATA_ARRAY_SIZE];
 decltype(DigitalSensors::enc_l_idx_) DigitalSensors::enc_l_idx_, DigitalSensors::enc_r_idx_;
 
-DigitalSensors::DigitalSensors() : shutter_(false), transport_(false), error_(false),
-        enc_l_(enc_data_l_, &enc_l_idx_, PTR_8(CtBotConfig::ENC_L_REG::DDR), PTR_8(CtBotConfig::ENC_L_REG::PORT), CtBotConfig::ENC_L_PIN),
-        enc_r_(enc_data_r_, &enc_r_idx_, PTR_8(CtBotConfig::ENC_R_REG::DDR), PTR_8(CtBotConfig::ENC_R_REG::PORT), CtBotConfig::ENC_R_PIN),
-        rc5_(PTR_8(CtBotConfig::RC5_REG::DDR), PTR_8(CtBotConfig::RC5_REG::PORT), PTR_8(CtBotConfig::RC5_PCMSK), CtBotConfig::RC5_PIN, CtBotConfig::RC5_PCI),
-        remote_control_(rc5_, CtBotConfig::RC5_ADDR) {
+DigitalSensors::DigitalSensors()
+    : shutter_(false), transport_(false), error_(false),
+      enc_l_(enc_data_l_, &enc_l_idx_, PTR_8(CtBotConfig::ENC_L_REG::DDR), PTR_8(CtBotConfig::ENC_L_REG::PORT), CtBotConfig::ENC_L_PIN),
+      enc_r_(enc_data_r_, &enc_r_idx_, PTR_8(CtBotConfig::ENC_R_REG::DDR), PTR_8(CtBotConfig::ENC_R_REG::PORT), CtBotConfig::ENC_R_PIN),
+      rc5_(PTR_8(CtBotConfig::RC5_REG::DDR), PTR_8(CtBotConfig::RC5_REG::PORT), PTR_8(CtBotConfig::RC5_PCMSK), CtBotConfig::RC5_PIN, CtBotConfig::RC5_PCI),
+      remote_control_(rc5_, CtBotConfig::RC5_ADDR) {
     CBI<uint8_t>(CtBotConfig::SHUTTER_REG::DDR, CtBotConfig::SHUTTER_PIN); // set input
     CBI<uint8_t>(CtBotConfig::SHUTTER_REG::PORT, CtBotConfig::SHUTTER_PIN); // disable pullup
 
@@ -70,5 +72,3 @@ void DigitalSensors::update() {
 }
 
 } /* namespace ctbot */
-
-

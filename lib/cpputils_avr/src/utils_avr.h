@@ -122,7 +122,7 @@ inline static constexpr uint16_t BV_16(const uint8_t bit) {
 template <typename T>
 inline static void CBI(volatile T* sfr, const uint8_t bit) {
     const T mask { BV<T>(bit) };
-    *sfr &= ~mask;
+    *sfr = static_cast<T>(*sfr & ~mask);
 }
 
 /**
@@ -135,7 +135,7 @@ template <typename T>
 inline static void CBI(intptr_t sfr, const uint8_t bit) {
     auto ptr(PTR<T>(sfr));
     const T mask { BV<T>(bit) };
-    *ptr &= ~mask;
+    *ptr = static_cast<T>(*ptr & ~mask);
 }
 
 /**

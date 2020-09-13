@@ -33,14 +33,14 @@
 namespace ctbot {
 using namespace avr;
 
-Encoder::Encoder(const enc_t* p_data, const volatile uint8_t* p_idx, volatile uint8_t* p_ddr, volatile uint8_t* p_port, const uint8_t pin) :
-        edges_(0), last_idx_(0), speed_(0.f), speed_avg_(0.f), direction_(true), p_enc_data_(p_data), p_enc_idx_(p_idx), last_update_(0), count_(0) {
+Encoder::Encoder(const enc_t* p_data, const volatile uint8_t* p_idx, volatile uint8_t* p_ddr, volatile uint8_t* p_port, const uint8_t pin)
+    : edges_(0), last_idx_(0), speed_(0.f), speed_avg_(0.f), direction_(true), p_enc_data_(p_data), p_enc_idx_(p_idx), last_update_(0), count_(0) {
     CBI(p_ddr, pin); // set input
     CBI(p_port, pin); // disable pullup
 }
 
 void Encoder::init_interrupts() {
-// FIXME: avoid hard coded values where possible
+    // FIXME: avoid hard coded values where possible
     SBI(&EICRA, ISC10); // Any logical change on INT1 generates an interrupt request
     SBI(&EIMSK, INT1); // External Interrupt Request 1 Enable
     SBI(&EIFR, INTF1); // clear int flag
@@ -59,10 +59,10 @@ void Encoder::init_interrupts() {
 }
 
 void Encoder::update() {
-    const uint8_t idx(*p_enc_idx_);
-    int8_t diff_enc(idx - last_idx_);
+    const uint8_t idx { *p_enc_idx_ };
+    int8_t diff_enc { static_cast<int8_t>(idx - last_idx_) };
     if (diff_enc < 0) {
-        diff_enc += DATA_ARRAY_SIZE;
+        diff_enc = static_cast<int8_t>(diff_enc + DATA_ARRAY_SIZE);
     }
     // std::cout << static_cast<uint16_t>(idx) << "\t" << static_cast<uint16_t>(diff_enc) << "\n";
 
@@ -73,8 +73,8 @@ void Encoder::update() {
         dt += Timer::ticks_to_us(65536UL);
     }
     if (diff_enc) {
-        if (! direction_) {
-            diff_enc = -diff_enc;
+        if (!direction_) {
+            diff_enc = static_cast<int8_t>(-diff_enc);
         }
         edges_ += diff_enc;
         last_idx_ = idx;
@@ -88,7 +88,7 @@ void Encoder::update() {
 
         // std::cout << ticks << "\t" << static_cast<uint16_t>(diff_enc) << "\n";
 
-        count_ += diff_enc;
+        count_ = static_cast<int8_t>(count_ + diff_enc);
 
         // std::cout << static_cast<int16_t>(count_) << "\n";
 
@@ -100,7 +100,7 @@ void Encoder::update() {
         if (diff == 0) {
             return;
         }
-        speed_ = (WHEEL_PERIMETER / ENCODER_MARKS * 1000000.f) * count_ / diff;
+        speed_ = (WHEEL_PERIMETER / ENCODER_MARKS * 1000000.f) * count_ / static_cast<float>(diff);
         speed_avg_ = speed_avg_ * (1.f - AVG_FILTER_PARAM) + speed_ * AVG_FILTER_PARAM;
 
         if (speed_ != 0.f) {

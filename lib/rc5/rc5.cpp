@@ -78,16 +78,16 @@ bool RC5::read(uint16_t& message, const bool value, const uint32_t elapsed) {
 
 bool RC5::read(bool& toggle, uint8_t& addr, uint8_t& cmd, const bool value, const uint32_t elapsed) {
     uint16_t msg;
-    if (! read(msg, value, elapsed)) {
+    if (!read(msg, value, elapsed)) {
         return false;
     }
 
     toggle = (msg & TOGGLE_MASK) >> TOGGLE_SHIFT;
-    addr = (msg & ADDRESS_MASK) >> ADDRESS_SHIFT;
+    addr = static_cast<uint8_t>((msg & ADDRESS_MASK) >> ADDRESS_SHIFT);
 
     // Support for extended RC5: to get extended command, invert S2 and shift into command's 7th bit
     const uint8_t extended { static_cast<uint8_t>((~msg & S2_MASK) >> (S2_SHIFT - 7)) };
-    cmd = ((msg & COMMAND_MASK) >> COMMAND_SHIFT) | extended;
+    cmd = static_cast<uint8_t>(((msg & COMMAND_MASK) >> COMMAND_SHIFT) | extended);
 
     reset();
 

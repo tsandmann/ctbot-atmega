@@ -40,137 +40,144 @@
 
 namespace ctbot {
 
-CommInterface::CommInterface(SerialConnectionAVR& io_connection, bool enable_echo) : io_(io_connection), echo_(enable_echo), error_(0), p_input_(input_buffer_) {
-    CtBot::get_instance().get_scheduler()->task_add("comm", TASK_PERIOD_MS, [] (void* p_data) { auto p_this(reinterpret_cast<CommInterface*>(p_data)); return p_this->run(); }, this);
+CommInterface::CommInterface(SerialConnectionAVR& io_connection, bool enable_echo)
+    : io_(io_connection), echo_(enable_echo), error_(0), p_input_(input_buffer_) {
+    CtBot::get_instance().get_scheduler()->task_add(
+        "comm", TASK_PERIOD_MS,
+        [](void* p_data) {
+            auto p_this(reinterpret_cast<CommInterface*>(p_data));
+            return p_this->run();
+        },
+        this);
 }
 
 int16_t CommInterface::debug_print(const avr::FlashStringHelper* str) const {
-	auto ptr(reinterpret_cast<PGM_P>(str));
-	size_t n { 0 };
-	while (true) {
-		const uint8_t c { pgm_read_byte(ptr++) };
-		if (c == 0) {
-			break;
-		}
-		if (io_.send(&c, 1)) {
-			++n;
-		} else {
-			break;
-		}
-	}
-	return n;
+    auto ptr(reinterpret_cast<PGM_P>(str));
+    size_t n { 0 };
+    while (true) {
+        const uint8_t c { pgm_read_byte(ptr++) };
+        if (c == 0) {
+            break;
+        }
+        if (io_.send(&c, 1)) {
+            ++n;
+        } else {
+            break;
+        }
+    }
+    return n;
 }
 
 int16_t CommInterface::debug_print(const char c) const {
-	return io_.send(&c, 1);
+    return io_.send(&c, 1);
 }
 
 int16_t CommInterface::debug_print(const char* str) const {
-	return io_.send(str, std::strlen(str));
+    return io_.send(str, std::strlen(str));
 }
 
 int16_t CommInterface::debug_print(const std::string& str) const {
-	return io_.send(str.c_str(), str.length());
+    return io_.send(str.c_str(), str.length());
 }
 
 /**
  * @note based on Arduino Print::printNumber()
  */
 int16_t CommInterface::print_uint(const uint32_t v, const PrintBase base) const {
-	if (base == PrintBase::NONE) {
-		return debug_print(static_cast<const char>(v));
-	}
+    if (base == PrintBase::NONE) {
+        return debug_print(static_cast<const char>(v));
+    }
 
-	uint32_t value { v };
-	char buf[8 * sizeof(uint32_t) + 1]; // Assumes 8-bit chars plus zero byte
-	char* str = &buf[sizeof(buf) - 1];
-	*str = '\0';
+    uint32_t value { v };
+    char buf[8 * sizeof(uint32_t) + 1]; // Assumes 8-bit chars plus zero byte
+    char* str = &buf[sizeof(buf) - 1];
+    *str = '\0';
 
-	const uint8_t base_value { static_cast<const uint8_t>(base) };
-	do {
-		const char c { static_cast<const char>(value % base_value) };
-		value /= base_value;
-		*--str = c < 10 ? c + '0' : c + 'A' - 10;
-	} while (value);
+    const uint8_t base_value { static_cast<const uint8_t>(base) };
+    do {
+        const char c { static_cast<const char>(value % base_value) };
+        value /= base_value;
+        *--str = static_cast<char>(c < 10 ? c + '0' : c + 'A' - 10);
+    } while (value);
 
-	return debug_print(str);
+    return debug_print(str);
 }
 
 int16_t CommInterface::print_int(const int32_t v, const PrintBase base) const {
-	if (base == PrintBase::NONE) {
-		return print_uint(static_cast<uint32_t>(v), PrintBase::NONE);
-	}
+    if (base == PrintBase::NONE) {
+        return print_uint(static_cast<uint32_t>(v), PrintBase::NONE);
+    }
 
-	if (base == PrintBase::DEC) {
-		if (v < 0) {
-			const int16_t t { debug_print('-') };
-			const uint32_t u { static_cast<uint32_t>(-v) };
-			return print_uint(u, PrintBase::DEC) + t;
-		}
-		return print_uint(static_cast<uint32_t>(v), PrintBase::DEC);
-	} else {
-		return print_uint(static_cast<uint32_t>(v), base);
-	}
+    if (base == PrintBase::DEC) {
+        if (v < 0) {
+            const int16_t t { debug_print('-') };
+            const uint32_t u { static_cast<uint32_t>(-v) };
+            return print_uint(u, PrintBase::DEC) + t;
+        }
+        return print_uint(static_cast<uint32_t>(v), PrintBase::DEC);
+    } else {
+        return print_uint(static_cast<uint32_t>(v), base);
+    }
 }
 
 /**
  * @note based on Arduino Print::printFloat()
  */
 int16_t CommInterface::debug_print(const float v, const uint8_t digits) const {
-	float number { v };
-	uint8_t d { digits };
-	size_t n { 0U };
+    float number { v };
+    uint8_t d { digits };
+    size_t n { 0U };
 
-	if (std::isnan(number)) {
-		return debug_print("nan");
-	}
-	if (std::isinf(number)) {
-		return debug_print("inf");
-	}
-	if (number > 4294967040.f) {
-		return debug_print("ovf"); // constant determined empirically
-	}
-	if (number < -4294967040.f) {
-		return debug_print("ovf"); // constant determined empirically
-	}
+    if (std::isnan(number)) {
+        return debug_print("nan");
+    }
+    if (std::isinf(number)) {
+        return debug_print("inf");
+    }
+    if (number > 4294967040.f) {
+        return debug_print("ovf"); // constant determined empirically
+    }
+    if (number < -4294967040.f) {
+        return debug_print("ovf"); // constant determined empirically
+    }
 
-	// Handle negative numbers
-	if (number < 0.f) {
-		n += debug_print('-');
-		number = -number;
-	}
+    // Handle negative numbers
+    if (number < 0.f) {
+        n += debug_print('-');
+        number = -number;
+    }
 
-	// Round correctly so that print(1.999, 2) prints as "2.00"
-	float rounding { 0.5f };
-	for (uint8_t i { 0 }; i < d; ++i) {
-		rounding /= 10.f;
-	}
+    // Round correctly so that print(1.999, 2) prints as "2.00"
+    float rounding { 0.5f };
+    for (uint8_t i { 0 }; i < d; ++i) {
+        rounding /= 10.f;
+    }
 
-	number += rounding;
+    number += rounding;
 
-	// Extract the integer part of the number and print it
-	const uint32_t int_part { static_cast<uint32_t>(number) };
-	float remainder { number - static_cast<float>(int_part) };
-	n += debug_print(int_part, PrintBase::DEC);
+    // Extract the integer part of the number and print it
+    const uint32_t int_part { static_cast<uint32_t>(number) };
+    float remainder { number - static_cast<float>(int_part) };
+    n += debug_print(int_part, PrintBase::DEC);
 
-	// Print the decimal point, but only if there are digits beyond
-	if (d > 0) {
-		n += debug_print('.');
-	}
+    // Print the decimal point, but only if there are digits beyond
+    if (d > 0) {
+        n += debug_print('.');
+    }
 
-	// Extract digits from the remainder one at a time
-	while (d-- > 0) {
-		remainder *= 10.f;
-		uint16_t toPrint { static_cast<uint16_t>(remainder) };
-		n += debug_print(toPrint, PrintBase::DEC);
-		remainder -= toPrint;
-	}
+    // Extract digits from the remainder one at a time
+    while (d-- > 0) {
+        remainder *= 10.f;
+        uint16_t toPrint { static_cast<uint16_t>(remainder) };
+        n += debug_print(toPrint, PrintBase::DEC);
+        remainder -= toPrint;
+    }
 
-	return n;
+    return n;
 }
 
-CommInterfaceCmdParser::CommInterfaceCmdParser(SerialConnectionAVR& io_connection, CmdParser& parser, bool enable_echo) :
-    CommInterface(io_connection, enable_echo), cmd_parser_(parser) {
+CommInterfaceCmdParser::CommInterfaceCmdParser(SerialConnectionAVR& io_connection, CmdParser& parser, bool enable_echo)
+    : CommInterface(io_connection, enable_echo), cmd_parser_(parser) {
     cmd_parser_.set_echo(enable_echo);
 }
 

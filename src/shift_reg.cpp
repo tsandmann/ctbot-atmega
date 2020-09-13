@@ -55,14 +55,14 @@ void ShiftReg<SCK_PIN, RCK_PIN>::out(uint8_t data, const uint8_t pins_to_set, co
             CBI<uint8_t>(CtBotConfig::SHIFT_REG::PORT, CtBotConfig::SHIFT_SDATA_PIN);
         }
         SBI<uint8_t>(CtBotConfig::SHIFT_REG::PORT, SCK_PIN); // latch to storage -> rising edge on SCK
-        data <<= 1;
+        data = static_cast<uint8_t>(data << 1);
     }
 
     ExecuteAtomic<> x;
-    x([pins_to_clear, pins_to_set] () {
+    x([pins_to_clear, pins_to_set]() {
         uint8_t tmp { *PTR_8(CtBotConfig::SHIFT_REG::PORT) };
-        tmp &= ~((1 << (SCK_PIN)) | (1 << (CtBotConfig::SHIFT_SDATA_PIN)) | pins_to_clear);
-        tmp |= BV_8(RCK_PIN) | pins_to_set; // latch to output -> rising edge on RCK
+        tmp = static_cast<uint8_t>(tmp & ~((1 << (SCK_PIN)) | (1 << (CtBotConfig::SHIFT_SDATA_PIN)) | pins_to_clear));
+        tmp = tmp | BV_8(RCK_PIN) | pins_to_set; // latch to output -> rising edge on RCK
         *PTR_8(CtBotConfig::SHIFT_REG::PORT) = tmp;
     });
 }

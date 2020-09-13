@@ -27,195 +27,204 @@ namespace std {
 template <class charT, class traits, class Tserial>
 class basic_serialbuf : public basic_streambuf<charT, traits> {
 public:
-	/*
-	 * Types used here
-	 */
-	typedef charT char_type;
-	typedef typename traits::int_type int_type;
+    /*
+     * Types used here
+     */
+    typedef charT char_type;
+    typedef typename traits::int_type int_type;
 
-	/*
-	 * constructor - wraps an existing Tserial class instance
-	 */
-	explicit basic_serialbuf(Tserial& serial_,ios_base::openmode which_ = ios_base::in | ios_base::out) : _serial(serial_) {
-		basic_streambuf<charT, traits>::openedFor = which_;
-	}
+    /*
+     * constructor - wraps an existing Tserial class instance
+     */
+    explicit basic_serialbuf(Tserial& serial_, ios_base::openmode which_ = ios_base::in | ios_base::out) : _serial(serial_) {
+        basic_streambuf<charT, traits>::openedFor = which_;
+    }
 
-	/*
-	 * Required to maintain the chain
-	 */
-	virtual ~basic_serialbuf() {}
+    /*
+     * Required to maintain the chain
+     */
+    virtual ~basic_serialbuf() {}
 
-	/*
-	 * Get a reference to the wrapped object
-	 */
-	Tserial& serial() { return _serial; }
+    /*
+     * Get a reference to the wrapped object
+     */
+    Tserial& serial() {
+        return _serial;
+    }
 
 protected:
-	/*
-	 * Get how many bytes available
-	 */
-	virtual int showmanyc() {
-		return _serial.available();
-	}
+    /*
+     * Get how many bytes available
+     */
+    virtual int showmanyc() {
+        return _serial.available();
+    }
 
-	/*
-	 * Read up to n chars
-	 */
-	virtual streamsize xsgetn(char_type* c, streamsize n) {
-		streamsize i = 0;
-		char_type data;
+    /*
+     * Read up to n chars
+     */
+    virtual streamsize xsgetn(char_type* c, streamsize n) {
+        streamsize i = 0;
+        char_type data;
 
-		while ((data = _serial.read()) != -1 && i < n ) {
-			c[i] = data;
-			++i;
-		}
-		return i;
-	}
+        while ((data = static_cast<char_type>(_serial.read())) != -1 && i < n) {
+            c[i] = data;
+            ++i;
+        }
+        return i;
+    }
 
-	/*
-	 * Write up to n chars
-	 */
-	virtual streamsize xsputn(const char_type* s, streamsize n) {
-		for (streamsize i = 0; i < n; i++) {
-			char_type c = s[i];
-			_serial.write(c);
-		}
+    /*
+     * Write up to n chars
+     */
+    virtual streamsize xsputn(const char_type* s, streamsize n) {
+        for (streamsize i = 0; i < n; i++) {
+            char_type c = s[i];
+            _serial.write(c);
+        }
 
-		return n;
-	}
+        return n;
+    }
 
-	/*
-	 * write a single char
-	 */
-	virtual int_type overflow (int_type c = traits::eof()) {
-		if (! traits::eq_int_type(c, traits::eof())) {
-			_serial.write(static_cast<char_type> (c));
-		}
-		return traits::not_eof(c);
-	}
+    /*
+     * write a single char
+     */
+    virtual int_type overflow(int_type c = traits::eof()) {
+        if (!traits::eq_int_type(c, traits::eof())) {
+            _serial.write(static_cast<char_type>(c));
+        }
+        return traits::not_eof(c);
+    }
 
-	/*
-	 * peek at a char where possible
-	 */
-	virtual int_type underflow(){
-		// There is no EOF condition on a serial stream.
-		// underflow() and uflow() should block, reproducing the
-		// OS behavior when there are no charaters to read.
-		while (! _serial.available()) { /* wait */ }
-		return _serial.peek();
-	}
+    /*
+     * peek at a char where possible
+     */
+    virtual int_type underflow() {
+        // There is no EOF condition on a serial stream.
+        // underflow() and uflow() should block, reproducing the
+        // OS behavior when there are no charaters to read.
+        while (!_serial.available()) { /* wait */
+        }
+        return _serial.peek();
+    }
 
-	/*
-	 * Read a char where possible
-	 */
-	virtual int_type uflow(){
-		// See underflow() above
-		while (! _serial.available()) { /* wait */ }
-		return _serial.read();
-	}
+    /*
+     * Read a char where possible
+     */
+    virtual int_type uflow() {
+        // See underflow() above
+        while (!_serial.available()) { /* wait */
+        }
+        return _serial.read();
+    }
 
-	/*
-	 * Our wrapped arduino class
-	 */
-	Tserial& _serial;
+    /*
+     * Our wrapped arduino class
+     */
+    Tserial& _serial;
 };
 
 
 /*
  * Input stream
  */
-template <class charT, class traits, class Tserial> class basic_iserialstream : public basic_istream<charT, traits> {
+template <class charT, class traits, class Tserial>
+class basic_iserialstream : public basic_istream<charT, traits> {
 public:
-	/*
-	 * Types used here
-	 */
-	typedef charT char_type;
+    /*
+     * Types used here
+     */
+    typedef charT char_type;
 
-	/*
-	 * Constructor - default the serial object to #1
-	 * Mega users can explicity initialise with one of
-	 * the others
-	 */
-	explicit basic_iserialstream(Tserial& serial_) : basic_ios<charT, traits>(&sb), basic_istream<charT, traits>(&sb), sb(serial_, ios_base::in) {}
+    /*
+     * Constructor - default the serial object to #1
+     * Mega users can explicity initialise with one of
+     * the others
+     */
+    explicit basic_iserialstream(Tserial& serial_) : basic_ios<charT, traits>(&sb), basic_istream<charT, traits>(&sb), sb(serial_, ios_base::in) {}
 
-	/*
-	 * Required to maintain the chain
-	 */
-	virtual ~basic_iserialstream() {}
+    /*
+     * Required to maintain the chain
+     */
+    virtual ~basic_iserialstream() {}
 
-	/*
-	 * The wrapped object
-	 */
+    /*
+     * The wrapped object
+     */
 private:
-	basic_serialbuf<charT, traits, Tserial> sb;
+    basic_serialbuf<charT, traits, Tserial> sb;
 };
 
 
 /*
  * Output stream
  */
-template <class charT, class traits, class Tserial> class basic_oserialstream	: public basic_ostream<charT, traits>	{
+template <class charT, class traits, class Tserial>
+class basic_oserialstream : public basic_ostream<charT, traits> {
 public:
-	/*
-	 * Types used here
-	 */
-	typedef charT char_type;
+    /*
+     * Types used here
+     */
+    typedef charT char_type;
 
-	/*
-	 * Constructor - default the serial object to #1
-	 * Mega users can explicity initialise with one of
-	 * the others
-	 */
-	explicit basic_oserialstream(Tserial& serial_)
-		: basic_ios<charT, traits>(&sb), basic_ostream<charT, traits>(&sb), sb(serial_, ios_base::out) {}
+    /*
+     * Constructor - default the serial object to #1
+     * Mega users can explicity initialise with one of
+     * the others
+     */
+    explicit basic_oserialstream(Tserial& serial_) : basic_ios<charT, traits>(&sb), basic_ostream<charT, traits>(&sb), sb(serial_, ios_base::out) {}
 
-	/*
-	 * Required to maintain the chain
-	 */
-	virtual ~basic_oserialstream() {}
+    /*
+     * Required to maintain the chain
+     */
+    virtual ~basic_oserialstream() {}
 
-	/*
-	 * The wrapped object
-	 */
+    /*
+     * The wrapped object
+     */
 private:
-	basic_serialbuf<charT, traits, Tserial> sb;
+    basic_serialbuf<charT, traits, Tserial> sb;
 };
 
 
 /*
  * Input/output stream
  */
-template <class charT, class traits, class Tserial> class basic_ioserialstream : public basic_iostream<charT, traits> {
+template <class charT, class traits, class Tserial>
+class basic_ioserialstream : public basic_iostream<charT, traits> {
 public:
-	/*
-	 * Types used here
-	 */
-	typedef charT char_type;
+    /*
+     * Types used here
+     */
+    typedef charT char_type;
 
-	/*
-	 * Constructor - default the serial object to #1
-	 * Mega users can explicity initialise with one of
-	 * the others
-	 */
-	explicit basic_ioserialstream(Tserial& serial_)
-		: basic_ios<charT, traits>(&sb), basic_iostream<charT, traits>(&sb), sb(serial_, ios_base::in | ios_base::out) {}
+    /*
+     * Constructor - default the serial object to #1
+     * Mega users can explicity initialise with one of
+     * the others
+     */
+    explicit basic_ioserialstream(Tserial& serial_)
+        : basic_ios<charT, traits>(&sb), basic_iostream<charT, traits>(&sb), sb(serial_, ios_base::in | ios_base::out) {}
 
-	/*
-	 * Required to maintain the chain
-	 */
-	virtual ~basic_ioserialstream() {}
+    /*
+     * Required to maintain the chain
+     */
+    virtual ~basic_ioserialstream() {}
 
-	/*
-	 * The wrapped object
-	 */
+    /*
+     * The wrapped object
+     */
 private:
-	basic_serialbuf<charT, traits, Tserial> sb;
+    basic_serialbuf<charT, traits, Tserial> sb;
 };
 
 
-template <class charT, class traits = char_traits<charT>, class Tserial=avr::SerialPort> class basic_serialbuf;
-template <class charT, class traits = char_traits<charT>, class Tserial=avr::SerialPort> class basic_iserialstream;
-template <class charT, class traits = char_traits<charT>, class Tserial=avr::SerialPort> class basic_oserialstream;
+template <class charT, class traits = char_traits<charT>, class Tserial = avr::SerialPort>
+class basic_serialbuf;
+template <class charT, class traits = char_traits<charT>, class Tserial = avr::SerialPort>
+class basic_iserialstream;
+template <class charT, class traits = char_traits<charT>, class Tserial = avr::SerialPort>
+class basic_oserialstream;
 
 typedef basic_iserialstream<char> ihserialstream;
 typedef basic_oserialstream<char> ohserialstream;

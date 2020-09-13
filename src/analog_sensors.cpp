@@ -32,15 +32,15 @@ namespace ctbot {
 using namespace avr;
 
 AnalogSensors::AnalogSensors() {
-    DDRA &= ~PIN_MASK; // set input
-    PORTA &= ~PIN_MASK; // disable pullups
+    DDRA = static_cast<uint8_t>(DDRA & ~PIN_MASK); // set input
+    PORTA = static_cast<uint8_t>(PORTA & ~PIN_MASK); // disable pullups
     DIDR0 = PIN_MASK; // disable digital inputs
 
     ADCSRA = BV_8(ADEN) | BV_8(ADPS2) | BV_8(ADPS1) | BV_8(ADPS0); // set prescaler to 128, enable ADC
 }
 
 void AnalogSensors::update() {
-// FIXME: distance sensors every 50 ms only
+    // FIXME: distance sensors every 50 ms only
     for (uint8_t i(CtBotConfig::DISTANCE_L_PIN); i <= CtBotConfig::BORDER_R_PIN; ++i) {
         data_.raw[i] = analog_read(i);
     }
@@ -58,13 +58,14 @@ void AnalogSensors::update() {
 int16_t AnalogSensors::analog_read(const uint8_t pin) const {
     // set the analog reference (high two bits of ADMUX) and select the channel (low 4 bits).
     // this also sets ADLAR (left-adjust result) to 0 (the default).
-    ADMUX = BV_8(REFS0) | (pin & 0x7);
+    ADMUX = static_cast<uint8_t>(BV_8(REFS0) | (pin & 0x7));
 
     // start the conversion
     SBI(&ADCSRA, ADSC);
 
     // ADSC is cleared when the conversion finishes
-    while (ADCSRA & BV_8(ADSC)) {}
+    while (ADCSRA & BV_8(ADSC)) {
+    }
 
     // read ADCL first; doing so locks both ADCL and ADCH until ADCH is read
     const uint8_t low { ADCL };

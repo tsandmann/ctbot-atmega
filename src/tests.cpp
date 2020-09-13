@@ -37,7 +37,13 @@ namespace ctbot {
 namespace tests {
 
 LedTest::LedTest(CtBot& ctbot) : ctbot_(ctbot) {
-    ctbot_.get_scheduler()->task_add("ledtest", TASK_PERIOD_MS, [] (void* p_data) { auto p_this(reinterpret_cast<LedTest*>(p_data)); return p_this->run(); }, this);
+    ctbot_.get_scheduler()->task_add(
+        "ledtest", TASK_PERIOD_MS,
+        [](void* p_data) {
+            auto p_this(reinterpret_cast<LedTest*>(p_data));
+            return p_this->run();
+        },
+        this);
 }
 
 void LedTest::run() {
@@ -56,25 +62,37 @@ void LedTest::run() {
 
 
 LcdTest::LcdTest(CtBot& ctbot) : ctbot_(ctbot) {
-    ctbot_.get_scheduler()->task_add("lcdtest", TASK_PERIOD_MS, [] (void* p_data) { auto p_this(reinterpret_cast<LcdTest*>(p_data)); return p_this->run(); }, this);
+    ctbot_.get_scheduler()->task_add(
+        "lcdtest", TASK_PERIOD_MS,
+        [](void* p_data) {
+            auto p_this(reinterpret_cast<LcdTest*>(p_data));
+            return p_this->run();
+        },
+        this);
 }
 
 void LcdTest::run() {
     static uint32_t x { 0UL };
-    ctbot_.get_lcd()->set_cursor((x % 80) / 20 + 1, x % 20 + 1);
+    ctbot_.get_lcd()->set_cursor(static_cast<uint8_t>((x % 80) / 20 + 1), static_cast<uint8_t>(x % 20 + 1));
     ctbot_.get_lcd()->print(' ');
     ++x;
-    ctbot_.get_lcd()->set_cursor((x % 80) / 20 + 1, x % 20 + 1);
+    ctbot_.get_lcd()->set_cursor(static_cast<uint8_t>((x % 80) / 20 + 1), static_cast<uint8_t>(x % 20 + 1));
     ctbot_.get_lcd()->print('*');
-    ctbot_.get_lcd()->set_cursor(((x + 20) % 80) / 20 + 1, 1);
+    ctbot_.get_lcd()->set_cursor(static_cast<uint8_t>(((x + 20) % 80) / 20 + 1), 1);
     ctbot_.get_lcd()->print(F("Hello World :-)"));
-    ctbot_.get_lcd()->set_cursor(((x + 40) % 80) / 20 + 1, 1);
+    ctbot_.get_lcd()->set_cursor(static_cast<uint8_t>(((x + 40) % 80) / 20 + 1), 1);
     ctbot_.get_lcd()->printf(F("%5u"), static_cast<uint16_t>(x));
 }
 
 
 EnaTest::EnaTest(CtBot& ctbot) {
-    ctbot.get_scheduler()->task_add("enatest", TASK_PERIOD_MS, [] (void* p_data) { auto p_this(reinterpret_cast<EnaTest*>(p_data)); return p_this->run(); }, this);
+    ctbot.get_scheduler()->task_add(
+        "enatest", TASK_PERIOD_MS,
+        [](void* p_data) {
+            auto p_this(reinterpret_cast<EnaTest*>(p_data));
+            return p_this->run();
+        },
+        this);
 }
 
 void EnaTest::run() {
@@ -89,7 +107,13 @@ void EnaTest::run() {
 
 
 SensorLcdTest::SensorLcdTest(CtBot& ctbot) : ctbot_(ctbot) {
-    ctbot.get_scheduler()->task_add("senstest", TASK_PERIOD_MS, [] (void* p_data) { auto p_this(reinterpret_cast<SensorLcdTest*>(p_data)); return p_this->run(); }, this);
+    ctbot.get_scheduler()->task_add(
+        "senstest", TASK_PERIOD_MS,
+        [](void* p_data) {
+            auto p_this(reinterpret_cast<SensorLcdTest*>(p_data));
+            return p_this->run();
+        },
+        this);
 }
 
 void SensorLcdTest::run() {
@@ -102,7 +126,8 @@ void SensorLcdTest::run() {
     ctbot_.get_lcd()->printf(F("B=%03X %03X L=%03X %03X "), p_sens->get_border_l(), p_sens->get_border_r(), p_sens->get_line_l(), p_sens->get_line_r());
 
     ctbot_.get_lcd()->set_cursor(3, 1);
-    ctbot_.get_lcd()->printf(F("R=%2d %2d F=%d K=%d T=%d "), abs(p_sens->get_enc_l().get()) % 100, abs(p_sens->get_enc_r().get()) % 100, p_sens->get_error(), p_sens->get_shutter(), p_sens->get_transport());
+    ctbot_.get_lcd()->printf(F("R=%2d %2d F=%d K=%d T=%d "), abs(p_sens->get_enc_l().get()) % 100, abs(p_sens->get_enc_r().get()) % 100, p_sens->get_error(),
+        p_sens->get_shutter(), p_sens->get_transport());
 
     ctbot_.get_lcd()->set_cursor(4, 1);
     ctbot_.get_lcd()->printf(F("S=%4d %4d   "), static_cast<int16_t>(p_sens->get_enc_l().get_speed()), static_cast<int16_t>(p_sens->get_enc_r().get_speed()));

@@ -136,7 +136,7 @@ public:
         tmp.p_u32 = TimerIsrHelper::get_tickcount();
 
         ExecuteAtomic<FROM_ISR> x;
-        return x([&tmp] () {
+        return x([&tmp]() {
             const T ticks { *tmp.buf };
             return ticks;
         });

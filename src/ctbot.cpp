@@ -44,48 +44,46 @@
 
 namespace ctbot {
 
-const char CtBot::usage_text[] {
-    "command\tsubcommand [param]\texplanation\n"
-    "---------------------------------------------------\n"
-    "help (h)\t\t\tprint this help message\n"
-    "halt\t\t\t\tshutdown and put ATmega in sleep mode\n"
-    "\n"
+const char CtBot::usage_text[] { "command\tsubcommand [param]\texplanation\n"
+                                 "---------------------------------------------------\n"
+                                 "help (h)\t\t\tprint this help message\n"
+                                 "halt\t\t\t\tshutdown and put ATmega in sleep mode\n"
+                                 "\n"
 
-    "config (c)\n"
-    "\techo [0|1]\t\tset console echo on/off\n"
-    "\ttask ledtest [0|1]\t\tstart/stop LED test\n"
-    "\ttask sctrl [0|1]\t\tstart/stop speed controller task\n"
-    "\ttask [taskname] [0|1]\t\tstart/stop a task\n"
-    "\tk{p,i,d} [0;65535]\tset Kp/Ki/Kd parameter for speed controller\n"
-    "\n"
+                                 "config (c)\n"
+                                 "\techo [0|1]\t\tset console echo on/off\n"
+                                 "\ttask ledtest [0|1]\t\tstart/stop LED test\n"
+                                 "\ttask sctrl [0|1]\t\tstart/stop speed controller task\n"
+                                 "\ttask [taskname] [0|1]\t\tstart/stop a task\n"
+                                 "\tk{p,i,d} [0;65535]\tset Kp/Ki/Kd parameter for speed controller\n"
+                                 "\n"
 
-    "get (g)\n"
-    "\tdist\t\t\tprint current distance sensor's values\n"
-    "\tenc\t\t\tprint current encoder's values\n"
-    "\tborder\t\t\tprint current border sensor's values\n"
-    "\tline\t\t\tprint current line sensor's values\n"
-    "\tldr\t\t\tprint current LDR sensor's values\n"
+                                 "get (g)\n"
+                                 "\tdist\t\t\tprint current distance sensor's values\n"
+                                 "\tenc\t\t\tprint current encoder's values\n"
+                                 "\tborder\t\t\tprint current border sensor's values\n"
+                                 "\tline\t\t\tprint current line sensor's values\n"
+                                 "\tldr\t\t\tprint current LDR sensor's values\n"
 
-    "\tspeed\t\t\tprint current speed for left and right wheel\n"
-    "\tmotor\t\t\tprint pwm for left and right motor\n"
-    "\tservo\t\t\tprint setpoints for servos\n"
-    "\trc5\t\t\tprint last received RC5 data\n"
+                                 "\tspeed\t\t\tprint current speed for left and right wheel\n"
+                                 "\tmotor\t\t\tprint pwm for left and right motor\n"
+                                 "\tservo\t\t\tprint setpoints for servos\n"
+                                 "\trc5\t\t\tprint last received RC5 data\n"
 
-    "\ttrans\t\t\tprint current transport pocket status\n"
-    "\tdoor\t\t\tprint current door status\n"
-    "\terror\t\t\tprint current error status\n"
-    "\tled\t\t\tprint current LED setting\n"
+                                 "\ttrans\t\t\tprint current transport pocket status\n"
+                                 "\tdoor\t\t\tprint current door status\n"
+                                 "\terror\t\t\tprint current error status\n"
+                                 "\tled\t\t\tprint current LED setting\n"
 
-    "\ttasks\t\t\tprint task list\n"
-    "\n"
+                                 "\ttasks\t\t\tprint task list\n"
+                                 "\n"
 
-    "set (s)\n"
-    "\tspeed [-100;100] [=]\t\tset new speed in % for left and right motor\n"
-    "\tmotor [-16000;16000] [=]\tset new pwm for left and right motor\n"
-    "\tservo [0;255] [=]\t\tset new position for servo 1 and 2\n"
-    "\tled [0;255]\t\t\tset new LED setting\n"
-    "\tlcd [1;4] [1;20] TEXT\t\tprint TEXT on LCD at line and column\n"
-};
+                                 "set (s)\n"
+                                 "\tspeed [-100;100] [=]\t\tset new speed in % for left and right motor\n"
+                                 "\tmotor [-16000;16000] [=]\tset new pwm for left and right motor\n"
+                                 "\tservo [0;255] [=]\t\tset new position for servo 1 and 2\n"
+                                 "\tled [0;255]\t\t\tset new LED setting\n"
+                                 "\tlcd [1;4] [1;20] TEXT\t\tprint TEXT on LCD at line and column\n" };
 
 CtBot::CtBot() : p_serial_port_(Uart0::get_impl()) {
     /* initialize debug and command serial line */
@@ -111,14 +109,20 @@ void CtBot::stop() {
 void CtBot::setup() {
     Timer::init();
     p_scheduler_ = new Scheduler();
-    p_scheduler_->task_add("main", TASK_PERIOD_MS, [] (void* p_data) { auto p_this(reinterpret_cast<CtBot*>(p_data)); return p_this->run(); }, this);
+    p_scheduler_->task_add(
+        "main", TASK_PERIOD_MS,
+        [](void* p_data) {
+            auto p_this(reinterpret_cast<CtBot*>(p_data));
+            return p_this->run();
+        },
+        this);
 
     p_sensors_ = new Sensors();
 
-    p_motors_[0] = new Motor(p_sensors_->get_enc_l(), PTR_8(CtBotConfig::MOT_L_PWM_REG::DDR), CtBotConfig::MOT_L_PWM_PIN, PTR_8(CtBotConfig::MOT_L_DIR_REG::PORT),
-        PTR_8(CtBotConfig::MOT_L_DIR_REG::DDR), CtBotConfig::MOT_L_DIR_PIN, false, PTR_16(CtBotConfig::MOT_L_OCR));
-    p_motors_[1] = new Motor(p_sensors_->get_enc_r(), PTR_8(CtBotConfig::MOT_R_PWM_REG::DDR), CtBotConfig::MOT_R_PWM_PIN, PTR_8(CtBotConfig::MOT_R_DIR_REG::PORT),
-        PTR_8(CtBotConfig::MOT_R_DIR_REG::DDR), CtBotConfig::MOT_R_DIR_PIN, true, PTR_16(CtBotConfig::MOT_R_OCR));
+    p_motors_[0] = new Motor(p_sensors_->get_enc_l(), PTR_8(CtBotConfig::MOT_L_PWM_REG::DDR), CtBotConfig::MOT_L_PWM_PIN,
+        PTR_8(CtBotConfig::MOT_L_DIR_REG::PORT), PTR_8(CtBotConfig::MOT_L_DIR_REG::DDR), CtBotConfig::MOT_L_DIR_PIN, false, PTR_16(CtBotConfig::MOT_L_OCR));
+    p_motors_[1] = new Motor(p_sensors_->get_enc_r(), PTR_8(CtBotConfig::MOT_R_PWM_REG::DDR), CtBotConfig::MOT_R_PWM_PIN,
+        PTR_8(CtBotConfig::MOT_R_DIR_REG::PORT), PTR_8(CtBotConfig::MOT_R_DIR_REG::DDR), CtBotConfig::MOT_R_DIR_PIN, true, PTR_16(CtBotConfig::MOT_R_OCR));
 
     p_speedcontrols_[0] = new SpeedControl(p_sensors_->get_enc_l(), *p_motors_[0]);
     p_speedcontrols_[1] = new SpeedControl(p_sensors_->get_enc_r(), *p_motors_[1]);
@@ -141,17 +145,17 @@ void CtBot::setup() {
 }
 
 void CtBot::init_parser() {
-    p_parser_->register_cmd(F("help"), 'h', [] (const std::string&) {
+    p_parser_->register_cmd(F("help"), 'h', [](const std::string&) {
         CtBot::get_instance().p_comm_->debug_print(reinterpret_cast<const avr::FlashStringHelper*>(usage_text));
         return true;
     });
 
-    p_parser_->register_cmd(F("halt"), [] (const std::string&) {
+    p_parser_->register_cmd(F("halt"), [](const std::string&) {
         CtBot::get_instance().stop();
         return true;
     });
 
-    p_parser_->register_cmd(F("config"), 'c', [] (const std::string& args) {
+    p_parser_->register_cmd(F("config"), 'c', [](const std::string& args) {
         auto const p_this(&CtBot::get_instance());
 
         if (args.find("echo") != args.npos) {
@@ -167,7 +171,7 @@ void CtBot::init_parser() {
             if (task_id < 0xffff) {
                 uint8_t v;
                 CmdParser::split_args(args.substr(s), v);
-                if (! v) {
+                if (!v) {
                     p_this->get_scheduler()->task_suspend(task_id);
                 } else {
                     p_this->get_scheduler()->task_resume(task_id);
@@ -179,24 +183,27 @@ void CtBot::init_parser() {
             int16_t left, right;
             CmdParser::split_args(args, left, right);
             p_this->p_speedcontrols_[0]->set_parameters(static_cast<float>(left), p_this->p_speedcontrols_[0]->get_ki(), p_this->p_speedcontrols_[0]->get_kd());
-            p_this->p_speedcontrols_[1]->set_parameters(static_cast<float>(right), p_this->p_speedcontrols_[1]->get_ki(), p_this->p_speedcontrols_[1]->get_kd());
+            p_this->p_speedcontrols_[1]->set_parameters(
+                static_cast<float>(right), p_this->p_speedcontrols_[1]->get_ki(), p_this->p_speedcontrols_[1]->get_kd());
         } else if (args.find("ki") != args.npos) {
             int16_t left, right;
             CmdParser::split_args(args, left, right);
             p_this->p_speedcontrols_[0]->set_parameters(p_this->p_speedcontrols_[0]->get_kp(), static_cast<float>(left), p_this->p_speedcontrols_[0]->get_kd());
-            p_this->p_speedcontrols_[1]->set_parameters(p_this->p_speedcontrols_[1]->get_kp(), static_cast<float>(right), p_this->p_speedcontrols_[1]->get_kd());
+            p_this->p_speedcontrols_[1]->set_parameters(
+                p_this->p_speedcontrols_[1]->get_kp(), static_cast<float>(right), p_this->p_speedcontrols_[1]->get_kd());
         } else if (args.find("kd") != args.npos) {
             int16_t left, right;
             CmdParser::split_args(args, left, right);
             p_this->p_speedcontrols_[0]->set_parameters(p_this->p_speedcontrols_[0]->get_kp(), p_this->p_speedcontrols_[0]->get_ki(), static_cast<float>(left));
-            p_this->p_speedcontrols_[1]->set_parameters(p_this->p_speedcontrols_[1]->get_kp(), p_this->p_speedcontrols_[1]->get_ki(), static_cast<float>(right));
+            p_this->p_speedcontrols_[1]->set_parameters(
+                p_this->p_speedcontrols_[1]->get_kp(), p_this->p_speedcontrols_[1]->get_ki(), static_cast<float>(right));
         } else {
             return false;
         }
         return true;
     });
 
-    p_parser_->register_cmd(F("get"), 'g', [] (const std::string& args) {
+    p_parser_->register_cmd(F("get"), 'g', [](const std::string& args) {
         auto const p_this(&CtBot::get_instance());
 
         if (args == "dist") {
@@ -239,7 +246,7 @@ void CtBot::init_parser() {
         return true;
     });
 
-    p_parser_->register_cmd(F("set"), 's', [] (const std::string& args) {
+    p_parser_->register_cmd(F("set"), 's', [](const std::string& args) {
         auto const p_this(&CtBot::get_instance());
 
         if (args.find("speed") != args.npos) {
@@ -264,7 +271,7 @@ void CtBot::init_parser() {
         } else if (args.find("lcd") != args.npos) {
             uint8_t line, column;
             auto ptr(CmdParser::split_args(args, line, column));
-            if (! line && ! column) {
+            if (!line && !column) {
                 p_this->p_lcd_->clear();
                 return true;
             }
@@ -304,7 +311,7 @@ void CtBot::shutdown() {
 
     __builtin_avr_cli();
     do {
-        _SLEEP_CONTROL_REG = (_SLEEP_CONTROL_REG & ~(BV_8(SM0) | BV_8(SM1) | BV_8(SM2))) | (SLEEP_MODE_PWR_DOWN);
+        _SLEEP_CONTROL_REG = static_cast<uint8_t>((_SLEEP_CONTROL_REG & ~(BV_8(SM0) | BV_8(SM1) | BV_8(SM2))) | (SLEEP_MODE_PWR_DOWN));
     } while (0);
     sleep_enable();
     sleep_cpu();

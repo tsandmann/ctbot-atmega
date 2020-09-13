@@ -35,17 +35,17 @@ namespace avr {
 
 void SerialPort::begin(const uint32_t baud) const {
     /* try u2x mode first */
-    uint16_t baud_setting = (F_CPU / 4UL / baud - 1UL) / 2UL;
+    uint16_t baud_setting = static_cast<uint16_t>((F_CPU / 4UL / baud - 1UL) / 2UL);
     UCSR0A = BV_8(U2X0);
 
     /* the baud_setting cannot be > 4095, so switch back to non-u2x mode if the baud rate is too low */
     if (baud_setting > 4095U) {
         UCSR0A = 0;
-        baud_setting = (F_CPU / 8UL / baud - 1UL) / 2UL;
+        baud_setting = static_cast<uint16_t>((F_CPU / 8UL / baud - 1UL) / 2UL);
     }
 
     /* assign the baud_setting, a.k.a. ubrr (USART Baud Rate Register) */
-    UBRR0H = baud_setting >> 8;
+    UBRR0H = static_cast<uint8_t>(baud_setting >> 8);
     UBRR0L = baud_setting & 0xff;
 
     /* set the data bits, parity, and stop bits */
@@ -62,7 +62,7 @@ void SerialPort::end() {
 
     /* disable UART0 */
     uint8_t tmp { UCSR0B };
-    tmp &= ~(RXEN0 | TXEN0 | RXCIE0 | UDRIE0);
+    tmp = static_cast<uint8_t>(tmp & ~(RXEN0 | TXEN0 | RXCIE0 | UDRIE0));
     UCSR0B = tmp;
 
     /* clear any received data */
@@ -76,8 +76,8 @@ void SerialPort::flush() const {
 }
 
 int16_t SerialPort::read() {
-    ExecuteAtomic<std::is_same<uint8_t, rx_buf_idx_t>::value> x;
-    const rx_buf_idx_t head { x([this]() { return rx_buf_head_; }) };
+    ExecuteAtomic<std::is_same<uint8_t, rx_buf_idx_t>::value> x1;
+    const rx_buf_idx_t head { x1([this]() { return rx_buf_head_; }) };
 
     if (head == rx_buf_tail_) {
         // if the head isn't ahead of the tail, we don't have any characters
@@ -86,8 +86,8 @@ int16_t SerialPort::read() {
         const uint8_t c { rx_buffer_[rx_buf_tail_] };
         const rx_buf_idx_t new_tail { static_cast<rx_buf_idx_t>(static_cast<rx_buf_idx_t>(rx_buf_tail_ + 1U) % sizeof(rx_buffer_)) };
 
-        ExecuteAtomic<std::is_same<uint8_t, rx_buf_idx_t>::value> x;
-        x([this, new_tail]() { rx_buf_tail_ = new_tail; });
+        ExecuteAtomic<std::is_same<uint8_t, rx_buf_idx_t>::value> x2;
+        x2([this, new_tail]() { rx_buf_tail_ = new_tail; });
 
         return static_cast<int16_t>(c);
     }

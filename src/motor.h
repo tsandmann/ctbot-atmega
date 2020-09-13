@@ -39,7 +39,8 @@ class Motor {
 protected:
     static constexpr uint16_t PWM_PRESCALER { 1U }; /**< Clock prescaler for pwm timer */
     static constexpr uint16_t PWM_FREQUENCY { 16129U }; /**< Pwm frequency in Hz */
-    static constexpr uint16_t PWM_TOP { static_cast<uint16_t>(static_cast<float>(F_CPU) / (1.f * PWM_PRESCALER * PWM_FREQUENCY)) }; /**< Timer top value to achieve requested PWM frequency */
+    static constexpr uint16_t PWM_TOP { static_cast<uint16_t>(
+        static_cast<float>(F_CPU) / (1.f * PWM_PRESCALER * PWM_FREQUENCY)) }; /**< Timer top value to achieve requested PWM frequency */
 
     int16_t pwm_;
     volatile uint16_t* const p_ocr_;
@@ -60,8 +61,8 @@ public:
      * @param[in] invert: Invert motor direction setting; set to true, if wheel turning direction should be inverted
      * @param[in] ocr_reg: Pointer to output compare register of timer for pwm
      */
-    Motor(Encoder& enc, volatile uint8_t* ddr_reg_pwm, uint8_t pin_pwm, volatile uint8_t* port_reg_dir, volatile uint8_t* ddr_reg_dir,
-        uint8_t pin_dir, const bool invert, volatile uint16_t* ocr_reg);
+    Motor(Encoder& enc, volatile uint8_t* ddr_reg_pwm, uint8_t pin_pwm, volatile uint8_t* port_reg_dir, volatile uint8_t* ddr_reg_dir, uint8_t pin_dir,
+        const bool invert, volatile uint16_t* ocr_reg);
 
     /**
      * @brief Set a new pwm duty cycle

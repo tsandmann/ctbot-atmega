@@ -81,7 +81,7 @@ protected:
          * @param[in] other: Reference to task to compare with
          * @return true, if the other tasks has to be executed before (a lower next runtime)
          */
-        bool operator <(const Task& other) const {
+        bool operator<(const Task& other) const {
             return next_runtime_ > other.next_runtime_; // lowest next_runtime will be executed first!
         }
     };
@@ -98,7 +98,7 @@ protected:
      * @param[in] v: Reference to task which information shall be printed
      * @return Reference to used output stream
      */
-    friend std::ostream& operator <<(std::ostream& os, const Task& v);
+    friend std::ostream& operator<<(std::ostream& os, const Task& v);
 
     /**
      * @brief Helper function to get access to the underlying container of a std::priority_queue

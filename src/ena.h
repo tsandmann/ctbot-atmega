@@ -37,13 +37,13 @@ namespace ctbot {
  * @brief Enum class for all enable signals
  */
 enum class EnaTypes : uint8_t {
-    NONE        = 0,
-    DISTANCE    = 1 << 0,
-    WHEEL_ENC   = 1 << 1,
-    TRANSPORT   = 1 << 2,
-    BORDER      = 1 << 3,
-    SHUTTER     = 1 << 4,
-    LINE        = 1 << 5,
+    NONE = 0,
+    DISTANCE = 1 << 0,
+    WHEEL_ENC = 1 << 1,
+    TRANSPORT = 1 << 2,
+    BORDER = 1 << 3,
+    SHUTTER = 1 << 4,
+    LINE = 1 << 5,
     EXTENSION_1 = 1 << 6,
     EXTENSION_2 = 1 << 7,
 };
@@ -54,7 +54,7 @@ enum class EnaTypes : uint8_t {
  * @param[in] rhs: Right hand side operand
  * @return lhs OR rhs
  */
-inline constexpr EnaTypes operator | (EnaTypes lhs, EnaTypes rhs) {
+inline constexpr EnaTypes operator|(EnaTypes lhs, EnaTypes rhs) {
     return static_cast<EnaTypes>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs));
 }
 
@@ -64,7 +64,7 @@ inline constexpr EnaTypes operator | (EnaTypes lhs, EnaTypes rhs) {
  * @param[in] rhs: Right hand side operand
  * @return lhs AND rhs
  */
-inline constexpr EnaTypes operator & (EnaTypes lhs, EnaTypes rhs) {
+inline constexpr EnaTypes operator&(EnaTypes lhs, EnaTypes rhs) {
     return static_cast<EnaTypes>(static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs));
 }
 
@@ -73,7 +73,7 @@ inline constexpr EnaTypes operator & (EnaTypes lhs, EnaTypes rhs) {
  * @param[in] rhs: Right hand side operand
  * @return NOT rhs
  */
-inline constexpr EnaTypes operator ~ (EnaTypes rhs) {
+inline constexpr EnaTypes operator~(EnaTypes rhs) {
     return static_cast<EnaTypes>(~static_cast<uint8_t>(rhs));
 }
 
@@ -91,7 +91,7 @@ protected:
      * @note Shitfs out NOT status_, because of the low-active transistors
      */
     void update() const {
-        shiftreg_.out(~static_cast<uint8_t>(status_));
+        shiftreg_.out(static_cast<uint8_t>(~status_));
     }
 
 public:

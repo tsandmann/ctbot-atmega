@@ -36,7 +36,7 @@ bool Servo::initialized_ { false };
 Servo::Servo(ID num, volatile uint8_t* p_ddr, uint8_t pin, volatile uint16_t* p_ocr_reg) : id_ { num }, p_ocr_ { p_ocr_reg }, position_ { POS_OFF } {
     SBI(p_ddr, pin); // set servo pin as output
 
-    if (! initialized_) {
+    if (!initialized_) {
         initialized_ = true;
         GPIOR0 = 0; // both servos shut off
         TCNT3 = 0; // TIMER3 init
@@ -64,7 +64,8 @@ void Servo::set(uint8_t pos) {
         } else {
             SBI(&GPIOR0, static_cast<uint8_t>(1U));
         }
-        TIMSK3 |= BV_8(ICF3) | (id_ == ID::SERVO_1 ? BV_8(OCIE3A) : BV_8(OCIE3B)); // Input Capture Interrupt Enable, Output Compare A Match Interrupt Enable
+        TIMSK3 =
+            TIMSK3 | BV_8(ICF3) | (id_ == ID::SERVO_1 ? BV_8(OCIE3A) : BV_8(OCIE3B)); // Input Capture Interrupt Enable, Output Compare A Match Interrupt Enable
     }
     position_ = pos;
 }
@@ -77,16 +78,13 @@ ISR(TIMER3_CAPT_vect, ISR_NAKED) {
     /* check for servo 1 active */
     if (GPIOR0 & (1 << static_cast<uint8_t>(Servo::ID::SERVO_1))) {
         SBI<uint8_t>(CtBotConfig::SERVO_1_REG::PORT, CtBotConfig::SERVO_1_PIN); // PWM0 high
-    } else if (! (GPIOR0 & (1 << static_cast<uint8_t>(Servo::ID::SERVO_2)))) {
+    } else if (!(GPIOR0 & (1 << static_cast<uint8_t>(Servo::ID::SERVO_2)))) {
         /* both servos are off -> disable timer interrupts */
-        __asm__ __volatile__ (
-            "push r24		\n\t"
-            "ldi r24, 0		\n\t"
-            "sts %0, r24	\n\t"
-            "pop r24			"
-            ::	"n" (&TIMSK3)
-            :	"memory"
-        );
+        __asm__ __volatile__("push r24      \n\t"
+                             "ldi r24, 0    \n\t"
+                             "sts %0, r24   \n\t"
+                             "pop r24           " ::"n"(&TIMSK3)
+                             : "memory");
     }
 
     /* check for servo 2 active */

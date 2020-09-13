@@ -33,7 +33,7 @@ namespace ctbot {
 RemoteControl::RemoteControl(Rc5& rc5, uint8_t rc5_address) : rc5_(rc5), addr_(rc5_address), last_toggle_(rc5.get_toggle()), last_cmd_(rc5.get_cmd()) {
     /* register actions for keys / RC5 codes */
 
-    register_cmd(0x35 /* play */, [this] (uint8_t) {
+    register_cmd(0x35 /* play */, [this](uint8_t) {
         /* Hello World */
         auto const p_ctbot(&CtBot::get_instance());
         p_ctbot->get_comm()->debug_print(F("Hello World!\n"));
@@ -43,7 +43,7 @@ RemoteControl::RemoteControl(Rc5& rc5, uint8_t rc5_address) : rc5_(rc5), addr_(r
         return true;
     });
 
-    register_cmd(0xc /* power */, [] (uint8_t) {
+    register_cmd(0xc /* power */, [](uint8_t) {
         /* stop motors */
         auto const p_ctbot(&CtBot::get_instance());
         p_ctbot->get_speedcontrols()[0]->set_speed(0.f);
@@ -51,33 +51,33 @@ RemoteControl::RemoteControl(Rc5& rc5, uint8_t rc5_address) : rc5_(rc5), addr_(r
         return true;
     });
 
-    register_cmd(0x29 /* pause */, [this] (uint8_t) {
+    register_cmd(0x29 /* pause */, [this](uint8_t) {
         /* increase speed left and right */
         this->change_speed(false, 10.f);
         this->change_speed(true, 10.f);
         return true;
     });
 
-    register_cmd(0x36 /* stop */, [this] (uint8_t) {
+    register_cmd(0x36 /* stop */, [this](uint8_t) {
         /* decrease speed left and right */
         this->change_speed(false, -10.f);
         this->change_speed(true, -10.f);
         return true;
     });
 
-    register_cmd(0x32 /* << */, [this] (uint8_t) {
+    register_cmd(0x32 /* << */, [this](uint8_t) {
         /* increase speed right */
         this->change_speed(true, 10.f);
         return true;
     });
 
-    register_cmd(0x34 /* >> */, [this] (uint8_t) {
+    register_cmd(0x34 /* >> */, [this](uint8_t) {
         /* increase speed left */
         this->change_speed(false, 10.f);
         return true;
     });
 
-    register_cmd(0x2b /* I/II */, [] (uint8_t) {
+    register_cmd(0x2b /* I/II */, [](uint8_t) {
         /* shutdown */
         auto const p_ctbot(&CtBot::get_instance());
         p_ctbot->stop();

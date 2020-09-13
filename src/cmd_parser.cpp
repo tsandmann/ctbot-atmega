@@ -57,7 +57,7 @@ void CmdParser::register_cmd(const avr::FlashStringHelper* cmd, const char cmd_s
 }
 
 bool CmdParser::execute_cmd(const std::string& cmd) {
-    if (! cmd.length()) {
+    if (!cmd.length()) {
         return false;
     }
 
@@ -88,7 +88,7 @@ bool CmdParser::execute_cmd(const std::string& cmd) {
 }
 
 bool CmdParser::parse(const char* in, CommInterface& comm) {
-// FIXME: store CommInterface as member?
+    // FIXME: store CommInterface as member?
     static std::string last_line;
 
     if (*in) {

@@ -131,6 +131,12 @@ _Note for Atom IDE users:_ When installed via Atom package, Bash (Shell) used in
 1. Necessary linker flags: `-mmcu=atmega1284p -Wl,--gc-sections -flto -fuse-linker-plugin -lm` (if you link with `avr-g++`)
 1. Create an intel-hex file for avrdude with: `avr-objcopy -O ihex -R .eeprom YOUR_OUTPUT.elf YOUR_OUTPUT.hex`
 
+## Continuous integration tests
+
+| Branch              | Build status  |
+|:------------------- |:------------- |
+| master              | [![PlatformIO CI](https://github.com/tsandmann/ctbot-atmega/actions/workflows/pio_build.yml/badge.svg?branch=master)](https://github.com/tsandmann/ctbot-atmega/actions/workflows/pio_build.yml) |
+
 [ctBot]: https://www.heise.de/ct/artikel/c-t-Bot-und-c-t-Sim-284119.html
 [ArduinoCore]: https://github.com/arduino/ArduinoCore-avr
 [ctBotSW]: https://github.com/tsandmann/ct-bot
